@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barangay RMS · Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">BRMS</div>
+      <div class="brand-text">
+        <h1>Barangay</h1>
+        <p>Record Management</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="/dashboard" class="nav-link active">Dashboard</a>
+      <a href="#" class="nav-link">Residents</a>
+      <a href="#" class="nav-link">Households</a>
+      <a href="#" class="nav-link">Blotter</a>
+      <a href="#" class="nav-link">Clearances</a>
+      <a href="#" class="nav-link">Officials</a>
+      <a href="#" class="nav-link">Reports</a>
+      <div class="spacer"></div>
+      <a href="/" class="nav-link danger">Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2>Dashboard</h2>
+      <div class="topbar-actions">
+        <input class="search" type="search" placeholder="Search residents, records..." />
+        <button class="btn primary">New Record</button>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Residents</div>
+        <div class="stat-value">1,254</div>
+        <div class="stat-sub">+18 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Households</div>
+        <div class="stat-value">342</div>
+        <div class="stat-sub">+3 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Blotters</div>
+        <div class="stat-value warning">6</div>
+        <div class="stat-sub">2 due today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Clearances Issued</div>
+        <div class="stat-value">78</div>
+        <div class="stat-sub">Last 30 days</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Recent Residents</h3>
+          <button class="btn">View all</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Age</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Maria Santos</td>
+                <td>Purok 2</td>
+                <td>34</td>
+                <td><span class="badge success">Active</span></td>
+                <td class="actions">
+                  <button class="icon-btn">⋯</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Juan Dela Cruz</td>
+                <td>Purok 1</td>
+                <td>28</td>
+                <td><span class="badge success">Active</span></td>
+                <td class="actions"><button class="icon-btn">⋯</button></td>
+              </tr>
+              <tr>
+                <td>Ana Lopez</td>
+                <td>Purok 5</td>
+                <td>19</td>
+                <td><span class="badge info">New</span></td>
+                <td class="actions"><button class="icon-btn">⋯</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Open Blotters</h3>
+          <button class="btn">View all</button>
+        </div>
+        <ul class="list">
+          <li>
+            <div>
+              <div class="list-title">Noise Complaint</div>
+              <div class="list-sub">Reported by: R. Cruz · Purok 4</div>
+            </div>
+            <span class="badge warning">Due today</span>
+          </li>
+          <li>
+            <div>
+              <div class="list-title">Boundary Dispute</div>
+              <div class="list-sub">Reported by: M. Reyes · Purok 3</div>
+            </div>
+            <span class="badge">Open</span>
+          </li>
+          <li>
+            <div>
+              <div class="list-title">Curfew Violation</div>
+              <div class="list-sub">Reported by: Barangay Tanod</div>
+            </div>
+            <span class="badge">Open</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Clearance Requests</h3>
+          <button class="btn">Manage</button>
+        </div>
+        <ul class="list">
+          <li>
+            <div>
+              <div class="list-title">Barangay Clearance</div>
+              <div class="list-sub">Pending: 5 · Processed today: 12</div>
+            </div>
+            <span class="badge info">Pending</span>
+          </li>
+          <li>
+            <div>
+              <div class="list-title">Indigency Certificate</div>
+              <div class="list-sub">Pending: 2 · Processed today: 4</div>
+            </div>
+            <span class="badge success">On track</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Placeholder for future interactivity
+  </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Officials</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/officials.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">BRMS</div>
+            <div class="brand-text">
+                <h1>Barangay</h1>
+                <p>Record Management</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/residents" class="nav-link">Residents</a>
+            <a href="/households" class="nav-link">Households</a>
+            <a href="/blotter" class="nav-link">Blotter</a>
+            <a href="/clearances" class="nav-link">Clearances</a>
+            <a href="/officials" class="nav-link active">Officials</a>
+            <a href="#" class="nav-link">Reports</a>
+            <div class="spacer"></div>
+            <a href="/" class="nav-link danger">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h2>Barangay Officials</h2>
+            <div class="topbar-actions">
+                <input class="search" type="search" placeholder="Search officials..." />
+                <button class="btn primary" onclick="document.getElementById('addOfficialModal').style.display='block'">Add Official</button>
+            </div>
+        </header>
+
+        <section class="officials-grid">
+            <!-- Barangay Captain Card -->
+            <div class="official-card captain">
+                <div class="official-header">
+                    <div class="position-badge">Barangay Captain</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>RC</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Roberto Cruz</h3>
+                    <p>Serving 2nd Term</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Resolutions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- Kagawad Cards -->
+            <div class="official-card">
+                <div class="official-header">
+                    <div class="position-badge">Kagawad - Peace & Order</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>MS</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Maria Santos</h3>
+                    <p>Serving 1st Term</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Cases Handled</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">95%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <div class="official-card">
+                <div class="official-header">
+                    <div class="position-badge">Kagawad - Health</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>JR</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Jose Reyes</h3>
+                    <p>Serving 3rd Term</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Programs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- More Kagawad Cards -->
+            <div class="official-card">
+                <div class="official-header">
+                    <div class="position-badge">Kagawad - Education</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>AL</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Ana Lopez</h3>
+                    <p>Serving 1st Term</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Programs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">88%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- SK Chairman Card -->
+            <div class="official-card">
+                <div class="official-header">
+                    <div class="position-badge">SK Chairman</div>
+                    <div class="term-badge">2023-2026</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>MD</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Miguel Dela Cruz</h3>
+                    <p>Serving 1st Term</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Youth Programs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- Secretary Card -->
+            <div class="official-card">
+                <div class="official-header">
+                    <div class="position-badge">Secretary</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>LT</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Lisa Torres</h3>
+                    <p>2 Years of Service</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">245</div>
+                        <div class="stat-label">Documents</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Official Modal -->
+    <div id="addOfficialModal" class="modal">
+        <div class="modal-content">
+            <div class="panel-header">
+                <h3>Add New Official</h3>
+                <button class="icon-btn" onclick="document.getElementById('addOfficialModal').style.display='none'">✕</button>
+            </div>
+            <form class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Position</label>
+                        <select class="select-filter" required>
+                            <option value="">Select position...</option>
+                            <option>Barangay Captain</option>
+                            <option>Kagawad</option>
+                            <option>SK Chairman</option>
+                            <option>Secretary</option>
+                            <option>Treasurer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Committee (if Kagawad)</label>
+                        <select class="select-filter">
+                            <option value="">Select committee...</option>
+                            <option>Peace & Order</option>
+                            <option>Health</option>
+                            <option>Education</option>
+                            <option>Infrastructure</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="tel" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Term Start</label>
+                        <input type="date" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Term End</label>
+                        <input type="date" class="search" required>
+                    </div>
+                    <div class="form-group full">
+                        <label>Photo</label>
+                        <input type="file" class="search" accept="image/*">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="document.getElementById('addOfficialModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn primary">Add Official</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

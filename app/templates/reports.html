@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Reports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reports.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">BRMS</div>
+            <div class="brand-text">
+                <h1>Barangay</h1>
+                <p>Record Management</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/residents" class="nav-link">Residents</a>
+            <a href="/households" class="nav-link">Households</a>
+            <a href="/blotter" class="nav-link">Blotter</a>
+            <a href="/clearances" class="nav-link">Clearances</a>
+            <a href="/officials" class="nav-link">Officials</a>
+            <a href="/reports" class="nav-link active">Reports</a>
+            <div class="spacer"></div>
+            <a href="/" class="nav-link danger">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h2>Reports & Analytics</h2>
+            <div class="topbar-actions">
+                <select class="select-filter" id="dateRange">
+                    <option value="this-month">This Month</option>
+                    <option value="last-month">Last Month</option>
+                    <option value="this-quarter">This Quarter</option>
+                    <option value="this-year">This Year</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <button class="btn primary">Generate Report</button>
+            </div>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Population</div>
+                <div class="stat-value">4,521</div>
+                <div class="stat-chart mini-chart">
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" style="height: 70%"></div>
+                    <div class="chart-bar active" style="height: 90%"></div>
+                </div>
+                <div class="stat-sub">↑ 12% from last quarter</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-value success">₱152,450</div>
+                <div class="stat-chart mini-chart">
+                    <div class="chart-bar" style="height: 40%"></div>
+                    <div class="chart-bar" style="height: 65%"></div>
+                    <div class="chart-bar" style="height: 55%"></div>
+                    <div class="chart-bar active" style="height: 85%"></div>
+                </div>
+                <div class="stat-sub">↑ 8% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Case Resolution</div>
+                <div class="stat-value">92%</div>
+                <div class="stat-chart mini-chart">
+                    <div class="chart-bar" style="height: 75%"></div>
+                    <div class="chart-bar" style="height: 85%"></div>
+                    <div class="chart-bar" style="height: 82%"></div>
+                    <div class="chart-bar active" style="height: 92%"></div>
+                </div>
+                <div class="stat-sub">↑ 5% improvement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Document Processing</div>
+                <div class="stat-value">2.4h</div>
+                <div class="stat-chart mini-chart">
+                    <div class="chart-bar" style="height: 70%"></div>
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 50%"></div>
+                    <div class="chart-bar active" style="height: 40%"></div>
+                </div>
+                <div class="stat-sub">↓ 25% faster processing</div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <div class="panel chart-panel">
+                <div class="panel-header">
+                    <h3>Monthly Revenue Breakdown</h3>
+                    <div class="panel-actions">
+                        <select class="select-filter">
+                            <option>All Sources</option>
+                            <option>Clearances</option>
+                            <option>Business Permits</option>
+                            <option>Other Fees</option>
+                        </select>
+                        <button class="icon-btn">⋯</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bars">
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Jan</div>
+                            <div class="chart-bar" style="height: 60%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Feb</div>
+                            <div class="chart-bar" style="height: 75%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Mar</div>
+                            <div class="chart-bar" style="height: 65%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Apr</div>
+                            <div class="chart-bar" style="height: 80%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">May</div>
+                            <div class="chart-bar" style="height: 70%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Jun</div>
+                            <div class="chart-bar" style="height: 85%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Jul</div>
+                            <div class="chart-bar" style="height: 90%"></div>
+                        </div>
+                        <div class="chart-bar-group">
+                            <div class="chart-label">Aug</div>
+                            <div class="chart-bar active" style="height: 95%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panels">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Recent Reports</h3>
+                        <button class="btn">Download All</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Monthly Summary</div>
+                                <div class="list-sub">July 2025 · Generated Aug 1</div>
+                            </div>
+                            <button class="btn">Download</button>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Population Census</div>
+                                <div class="list-sub">Q2 2025 · Generated Jul 15</div>
+                            </div>
+                            <button class="btn">Download</button>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Financial Report</div>
+                                <div class="list-sub">Q2 2025 · Generated Jul 10</div>
+                            </div>
+                            <button class="btn">Download</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Scheduled Reports</h3>
+                        <button class="btn">Configure</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Monthly Summary</div>
+                                <div class="list-sub">Generates on Sep 1</div>
+                            </div>
+                            <span class="badge">19d</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Quarterly Report</div>
+                                <div class="list-sub">Generates on Oct 1</div>
+                            </div>
+                            <span class="badge">49d</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <section class="reports-grid">
+            <div class="report-card">
+                <div class="report-icon population">📊</div>
+                <div class="report-info">
+                    <h4>Population Report</h4>
+                    <p>Demographics and household statistics</p>
+                </div>
+                <button class="btn">Generate</button>
+            </div>
+
+            <div class="report-card">
+                <div class="report-icon financial">💰</div>
+                <div class="report-info">
+                    <h4>Financial Report</h4>
+                    <p>Revenue and expenditure analysis</p>
+                </div>
+                <button class="btn">Generate</button>
+            </div>
+
+            <div class="report-card">
+                <div class="report-icon cases">⚖️</div>
+                <div class="report-info">
+                    <h4>Cases Report</h4>
+                    <p>Blotter and resolution statistics</p>
+                </div>
+                <button class="btn">Generate</button>
+            </div>
+
+            <div class="report-card">
+                <div class="report-icon clearances">📄</div>
+                <div class="report-info">
+                    <h4>Clearances Report</h4>
+                    <p>Document processing analytics</p>
+                </div>
+                <button class="btn">Generate</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Clearances</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clearances.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">BRMS</div>
+            <div class="brand-text">
+                <h1>Barangay</h1>
+                <p>Record Management</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/residents" class="nav-link">Residents</a>
+            <a href="/households" class="nav-link">Households</a>
+            <a href="/blotter" class="nav-link">Blotter</a>
+            <a href="/clearances" class="nav-link active">Clearances</a>
+            <a href="#" class="nav-link">Officials</a>
+            <a href="#" class="nav-link">Reports</a>
+            <div class="spacer"></div>
+            <a href="/" class="nav-link danger">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h2>Barangay Clearances</h2>
+            <div class="topbar-actions">
+                <input class="search" type="search" placeholder="Search clearances..." />
+                <button class="btn primary" onclick="document.getElementById('newClearanceModal').style.display='block'">New Clearance</button>
+            </div>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Issued</div>
+                <div class="stat-value">245</div>
+                <div class="stat-sub">This month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value warning">8</div>
+                <div class="stat-sub">Awaiting approval</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Revenue</div>
+                <div class="stat-value success">₱12,250</div>
+                <div class="stat-sub">From clearance fees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Processing</div>
+                <div class="stat-value">2.5h</div>
+                <div class="stat-sub">Response time</div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <div class="panel records-panel">
+                <div class="panel-header">
+                    <h3>Clearance Records</h3>
+                    <select class="select-filter">
+                        <option>All Types</option>
+                        <option>Barangay Clearance</option>
+                        <option>Business Permit</option>
+                        <option>Certificate of Residency</option>
+                        <option>Good Moral Character</option>
+                    </select>
+                </div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Reference No.</th>
+                                <th>Type</th>
+                                <th>Resident</th>
+                                <th>Purpose</th>
+                                <th>Issue Date</th>
+                                <th>Status</th>
+                                <th>Fee</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CLR-2025-245</td>
+                                <td>Barangay Clearance</td>
+                                <td>Maria Santos</td>
+                                <td>Employment</td>
+                                <td>Aug 12, 2025</td>
+                                <td><span class="badge success">Issued</span></td>
+                                <td>₱50.00</td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CLR-2025-244</td>
+                                <td>Business Permit</td>
+                                <td>Juan Cruz</td>
+                                <td>Store Opening</td>
+                                <td>Aug 12, 2025</td>
+                                <td><span class="badge warning">Pending</span></td>
+                                <td>₱100.00</td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CLR-2025-243</td>
+                                <td>Certificate of Residency</td>
+                                <td>Ana Lopez</td>
+                                <td>School Requirement</td>
+                                <td>Aug 11, 2025</td>
+                                <td><span class="badge success">Issued</span></td>
+                                <td>₱50.00</td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button class="btn" disabled>Previous</button>
+                    <div class="page-numbers">
+                        <a href="#" class="btn active">1</a>
+                        <a href="#" class="btn">2</a>
+                        <a href="#" class="btn">3</a>
+                    </div>
+                    <button class="btn">Next</button>
+                </div>
+            </div>
+
+            <div class="side-panels">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Popular Clearances</h3>
+                        <button class="btn">View All</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Barangay Clearance</div>
+                                <div class="list-sub">₱50.00 · Most requested</div>
+                            </div>
+                            <span class="badge">95</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Business Permit</div>
+                                <div class="list-sub">₱100.00 · High priority</div>
+                            </div>
+                            <span class="badge">42</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Certificate of Residency</div>
+                                <div class="list-sub">₱50.00 · Standard</div>
+                            </div>
+                            <span class="badge">38</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Recent Activity</h3>
+                        <button class="btn">View All</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Clearance Issued</div>
+                                <div class="list-sub">CLR-2025-245 · Maria Santos</div>
+                            </div>
+                            <span class="badge success">Now</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">New Request</div>
+                                <div class="list-sub">CLR-2025-244 · Juan Cruz</div>
+                            </div>
+                            <span class="badge warning">5m ago</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Payment Received</div>
+                                <div class="list-sub">CLR-2025-243 · ₱50.00</div>
+                            </div>
+                            <span class="badge">1h ago</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Clearance Modal -->
+    <div id="newClearanceModal" class="modal">
+        <div class="modal-content">
+            <div class="panel-header">
+                <h3>Request New Clearance</h3>
+                <button class="icon-btn" onclick="document.getElementById('newClearanceModal').style.display='none'">✕</button>
+            </div>
+            <form id="newClearanceForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Clearance Type</label>
+                        <select class="select-filter" required>
+                            <option value="">Select type...</option>
+                            <option>Barangay Clearance</option>
+                            <option>Business Permit</option>
+                            <option>Certificate of Residency</option>
+                            <option>Good Moral Character</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Resident</label>
+                        <select class="search" required>
+                            <option value="">Select resident...</option>
+                            <option>Maria Santos</option>
+                            <option>Juan Cruz</option>
+                            <option>Ana Lopez</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Purpose</label>
+                        <input type="text" class="search" required placeholder="e.g., Employment, Business, School...">
+                    </div>
+                    <div class="form-group">
+                        <label>Valid ID Type</label>
+                        <select class="select-filter" required>
+                            <option value="">Select ID type...</option>
+                            <option>National ID</option>
+                            <option>Driver's License</option>
+                            <option>Passport</option>
+                            <option>Voter's ID</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Number</label>
+                        <input type="text" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fee (₱)</label>
+                        <input type="number" class="search" readonly value="50.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select class="select-filter" required>
+                            <option value="">Select method...</option>
+                            <option>Cash</option>
+                            <option>GCash</option>
+                            <option>Bank Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="document.getElementById('newClearanceModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

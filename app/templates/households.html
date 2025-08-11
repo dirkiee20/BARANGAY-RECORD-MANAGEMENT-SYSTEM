@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Households</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/households.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">BRMS</div>
+            <div class="brand-text">
+                <h1>Barangay</h1>
+                <p>Record Management</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/residents" class="nav-link">Residents</a>
+            <a href="/households" class="nav-link active">Households</a>
+            <a href="#" class="nav-link">Blotter</a>
+            <a href="#" class="nav-link">Clearances</a>
+            <a href="#" class="nav-link">Officials</a>
+            <a href="#" class="nav-link">Reports</a>
+            <div class="spacer"></div>
+            <a href="/" class="nav-link danger">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h2>Households</h2>
+            <div class="topbar-actions">
+                <input class="search" type="search" placeholder="Search households..." />
+                <button class="btn primary" onclick="document.getElementById('addHouseholdModal').style.display='block'">New Household</button>
+            </div>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Households</div>
+                <div class="stat-value">342</div>
+                <div class="stat-sub">+3 this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Members</div>
+                <div class="stat-value">4.2</div>
+                <div class="stat-sub">per household</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Single Parent</div>
+                <div class="stat-value">86</div>
+                <div class="stat-sub">25% of households</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">New Registrations</div>
+                <div class="stat-value">5</div>
+                <div class="stat-sub">This week</div>
+            </div>
+        </section>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3>Household Records</h3>
+                <select class="select-filter">
+                    <option>All Households</option>
+                    <option>Single Parent</option>
+                    <option>Senior Headed</option>
+                    <option>With PWD Members</option>
+                </select>
+            </div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Household ID</th>
+                            <th>Head of Family</th>
+                            <th>Address</th>
+                            <th>Members</th>
+                            <th>Category</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>H-2025-001</td>
+                            <td>Juan Dela Cruz</td>
+                            <td>Block 1 Lot 2, Purok 1</td>
+                            <td>5 members</td>
+                            <td><span class="badge">Regular</span></td>
+                            <td class="actions">
+                                <button class="icon-btn">⋯</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-2025-002</td>
+                            <td>Maria Santos</td>
+                            <td>123 Main St., Purok 2</td>
+                            <td>3 members</td>
+                            <td><span class="badge info">Single Parent</span></td>
+                            <td class="actions">
+                                <button class="icon-btn">⋯</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>H-2025-003</td>
+                            <td>Pedro Reyes</td>
+                            <td>45 National Road, Purok 3</td>
+                            <td>6 members</td>
+                            <td><span class="badge success">Senior Headed</span></td>
+                            <td class="actions">
+                                <button class="icon-btn">⋯</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button class="btn" disabled>Previous</button>
+                <div class="page-numbers">
+                    <a href="#" class="btn active">1</a>
+                    <a href="#" class="btn">2</a>
+                    <a href="#" class="btn">3</a>
+                    <a href="#" class="btn">4</a>
+                </div>
+                <button class="btn">Next</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Household Modal -->
+    <div id="addHouseholdModal" class="modal">
+        <div class="modal-content">
+            <div class="panel-header">
+                <h3>Add New Household</h3>
+                <button class="icon-btn" onclick="document.getElementById('addHouseholdModal').style.display='none'">✕</button>
+            </div>
+            <form id="addHouseholdForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Head of Family</label>
+                        <select class="search">
+                            <option value="">Select a resident...</option>
+                            <option>Juan Dela Cruz</option>
+                            <option>Maria Santos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Household Category</label>
+                        <select class="select-filter">
+                            <option>Regular</option>
+                            <option>Single Parent</option>
+                            <option>Senior Headed</option>
+                            <option>With PWD</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Complete Address</label>
+                        <input type="text" class="search" placeholder="Block, Lot, Street, Purok" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Income</label>
+                        <input type="number" class="search" placeholder="₱" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Toilet Type</label>
+                        <select class="select-filter">
+                            <option>Water-sealed</option>
+                            <option>Antipolo</option>
+                            <option>None</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Remarks</label>
+                        <textarea class="search" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="document.getElementById('addHouseholdModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn primary">Save Household</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

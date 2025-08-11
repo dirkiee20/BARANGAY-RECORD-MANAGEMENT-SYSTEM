@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Blotter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blotter.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">BRMS</div>
+            <div class="brand-text">
+                <h1>Barangay</h1>
+                <p>Record Management</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/residents" class="nav-link">Residents</a>
+            <a href="/households" class="nav-link">Households</a>
+            <a href="/blotter" class="nav-link active">Blotter</a>
+            <a href="#" class="nav-link">Clearances</a>
+            <a href="#" class="nav-link">Officials</a>
+            <a href="#" class="nav-link">Reports</a>
+            <div class="spacer"></div>
+            <a href="/" class="nav-link danger">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h2>Blotter Records</h2>
+            <div class="topbar-actions">
+                <input class="search" type="search" placeholder="Search blotter records..." />
+                <button class="btn primary" onclick="document.getElementById('addBlotterModal').style.display='block'">New Case</button>
+            </div>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Cases</div>
+                <div class="stat-value">156</div>
+                <div class="stat-sub">This year</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Open Cases</div>
+                <div class="stat-value warning">12</div>
+                <div class="stat-sub">Needs attention</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Resolved</div>
+                <div class="stat-value success">142</div>
+                <div class="stat-sub">91% resolution rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Scheduled Hearings</div>
+                <div class="stat-value">8</div>
+                <div class="stat-sub">Next 7 days</div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <div class="panel records-panel">
+                <div class="panel-header">
+                    <h3>Case Records</h3>
+                    <select class="select-filter">
+                        <option>All Cases</option>
+                        <option>Open Cases</option>
+                        <option>Scheduled</option>
+                        <option>Resolved</option>
+                        <option>Dismissed</option>
+                    </select>
+                </div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Case No.</th>
+                                <th>Type</th>
+                                <th>Complainant</th>
+                                <th>Respondent</th>
+                                <th>Filed Date</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>B-2025-045</td>
+                                <td>Dispute</td>
+                                <td>Maria Santos</td>
+                                <td>Juan Cruz</td>
+                                <td>Aug 10, 2025</td>
+                                <td><span class="badge warning">Open</span></td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>B-2025-044</td>
+                                <td>Noise Complaint</td>
+                                <td>Pedro Reyes</td>
+                                <td>Ana Lopez</td>
+                                <td>Aug 8, 2025</td>
+                                <td><span class="badge info">Scheduled</span></td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>B-2025-043</td>
+                                <td>Property Damage</td>
+                                <td>Jose Garcia</td>
+                                <td>Ramon Torres</td>
+                                <td>Aug 5, 2025</td>
+                                <td><span class="badge success">Resolved</span></td>
+                                <td class="actions">
+                                    <button class="icon-btn">⋯</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button class="btn" disabled>Previous</button>
+                    <div class="page-numbers">
+                        <a href="#" class="btn active">1</a>
+                        <a href="#" class="btn">2</a>
+                        <a href="#" class="btn">3</a>
+                    </div>
+                    <button class="btn">Next</button>
+                </div>
+            </div>
+
+            <div class="side-panels">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Upcoming Hearings</h3>
+                        <button class="btn">Calendar</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Property Boundary Dispute</div>
+                                <div class="list-sub">Santos vs. Cruz · B-2025-045</div>
+                            </div>
+                            <span class="badge warning">Tomorrow</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">Noise Complaint</div>
+                                <div class="list-sub">Reyes vs. Lopez · B-2025-044</div>
+                            </div>
+                            <span class="badge">Aug 15</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Recent Activities</h3>
+                        <button class="btn">View All</button>
+                    </div>
+                    <ul class="list">
+                        <li>
+                            <div>
+                                <div class="list-title">Case Resolution</div>
+                                <div class="list-sub">B-2025-043 has been marked as resolved</div>
+                            </div>
+                            <span class="badge success">Today</span>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="list-title">New Case Filed</div>
+                                <div class="list-sub">B-2025-045 has been registered</div>
+                            </div>
+                            <span class="badge">Yesterday</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Blotter Modal -->
+    <div id="addBlotterModal" class="modal">
+        <div class="modal-content">
+            <div class="panel-header">
+                <h3>File New Case</h3>
+                <button class="icon-btn" onclick="document.getElementById('addBlotterModal').style.display='none'">✕</button>
+            </div>
+            <form id="addBlotterForm" class="form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Case Type</label>
+                        <select class="select-filter" required>
+                            <option value="">Select type...</option>
+                            <option>Dispute</option>
+                            <option>Noise Complaint</option>
+                            <option>Property Damage</option>
+                            <option>Others</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Filing Date</label>
+                        <input type="date" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Complainant</label>
+                        <select class="search" required>
+                            <option value="">Select resident...</option>
+                            <option>Maria Santos</option>
+                            <option>Pedro Reyes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Respondent</label>
+                        <select class="search" required>
+                            <option value="">Select resident...</option>
+                            <option>Juan Cruz</option>
+                            <option>Ana Lopez</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Incident Location</label>
+                        <input type="text" class="search" required>
+                    </div>
+                    <div class="form-group full">
+                        <label>Incident Details</label>
+                        <textarea class="search" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Incident Date</label>
+                        <input type="date" class="search" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Incident Time</label>
+                        <input type="time" class="search" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="document.getElementById('addBlotterModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn primary">File Case</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
