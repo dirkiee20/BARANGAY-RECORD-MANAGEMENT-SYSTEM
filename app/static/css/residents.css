@@ -43,18 +43,40 @@ body {
 .brand-text h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
 .brand-text p { font-size: 12px; color: var(--muted); }
 
-.nav { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+.nav { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    height: 100%; 
+}
+
 .nav .nav-link {
-    color: var(--text);
-    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 10px 12px;
     border-radius: 8px;
-    display: block;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.2s;
     border: 1px solid transparent;
 }
-.nav .nav-link:hover { background: #0f1a3a; border-color: var(--border); }
-.nav .nav-link.active { background: #121a39; border-color: var(--border); }
-.nav .nav-link.danger { color: #fca5a5; }
+
+.nav .nav-link:hover { 
+    background: #0f1a3a; 
+    border-color: var(--border); 
+}
+
+.nav .nav-link.active { 
+    background: #121a39; 
+    border-color: var(--border);
+    color: var(--primary);
+}
+
+.nav .nav-link.danger { 
+    color: #fca5a5; 
+    margin-top: auto;
+}
 .spacer { flex: 1; }
 
 /* Main Content */

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRMS · Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+    <div class="container">
+        <form method="POST" class="register-form">
+            {{ form.csrf_token }}
+            <div class="form-header">
+                <div class="logo">BRMS</div>
+                <h1>Create Account</h1>
+                <p>Join the Barangay Record Management System</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form.username.label }}
+                    {{ form.username(class="form-control", placeholder="Choose a username") }}
+                    {% if form.username.errors %}
+                        <div class="errors">
+                            {% for error in form.username.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control", placeholder="Enter your email") }}
+                    {% if form.email.errors %}
+                        <div class="errors">
+                            {% for error in form.email.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.password.label }}
+                    {{ form.password(class="form-control", placeholder="Create a password") }}
+                    {% if form.password.errors %}
+                        <div class="errors">
+                            {% for error in form.password.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.confirm_password.label }}
+                    {{ form.confirm_password(class="form-control", placeholder="Confirm your password") }}
+                    {% if form.confirm_password.errors %}
+                        <div class="errors">
+                            {% for error in form.confirm_password.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group role-group">
+                {{ form.role.label }}
+                {{ form.role(class="form-control select-control") }}
+                {% if form.role.errors %}
+                    <div class="errors">
+                        {% for error in form.role.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {{ form.submit(class="submit-btn") }}
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

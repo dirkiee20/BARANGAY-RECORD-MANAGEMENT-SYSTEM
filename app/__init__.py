@@ -27,8 +27,8 @@ def create_app():
     from . import models  # noqa: F401
 
     # Register HTTP routes
-    from . import routes  # Import routes to register them with the app
-    app.register_blueprint(routes.bp)
+    from .routes import init_app as init_routes
+    init_routes(app)
 
     # Optionally create tables for first run (ok with SQLite)
     with app.app_context():
