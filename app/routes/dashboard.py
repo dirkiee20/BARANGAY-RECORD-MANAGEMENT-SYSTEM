@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, current_app
 from app import db
 from app.models import Resident, Household, Blotter, Clearance, Official
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy import text
 import json
+import os
+from werkzeug.utils import secure_filename
 
 dashboard = Blueprint('dashboard', __name__)
 
@@ -368,12 +370,21 @@ def create_new_resident(form_data):
     try:
         # Extract form data
         first_name = form_data.get('firstName', '').strip()
+        middle_name = form_data.get('middleName', '').strip()
         last_name = form_data.get('lastName', '').strip()
-        sex = form_data.get('sex', '')
+        alias = form_data.get('alias', '').strip()
+        place_of_birth = form_data.get('placeOfBirth', '').strip()
         birth_date_str = form_data.get('birthDate', '')
+        civil_status = form_data.get('civilStatus', '').strip()
+        purok = form_data.get('purok', '').strip()
+        voters_status = form_data.get('votersStatus', '').strip()
+        identified_as = form_data.get('identifiedAs', '').strip()
+        email = form_data.get('email', '').strip()
+        occupation = form_data.get('occupation', '').strip()
+        citizenship = form_data.get('citizenship', '').strip()
+        sex = form_data.get('sex', '')
         address = form_data.get('address', '').strip()
         contact_number = form_data.get('contactNumber', '').strip()
-        email = form_data.get('email', '').strip()
         
         # Validation
         if not first_name or not last_name or not address:
@@ -387,15 +398,41 @@ def create_new_resident(form_data):
             except ValueError:
                 return jsonify({'error': 'Invalid birth date format'}), 400
         
+        # Handle file upload
+        profile_picture = request.files.get('profilePicture')
+        profile_picture_path = None
+        if profile_picture:
+            # You would typically save the file to a secure location
+            # and store the path in the database. For this example,
+            # we'll just store the filename.
+            filename = secure_filename(profile_picture.filename)
+            # Ensure the 'uploads' directory exists
+            upload_folder = os.path.join(current_app.static_folder, 'uploads')
+            os.makedirs(upload_folder, exist_ok=True)
+            profile_picture_path = os.path.join(upload_folder, filename)
+            profile_picture.save(profile_picture_path)
+            profile_picture_path = os.path.join('uploads', filename)
+
+
         # Create resident
         resident = Resident(
             first_name=first_name,
+            middle_name=middle_name,
             last_name=last_name,
-            sex=sex if sex else None,
+            alias=alias,
+            place_of_birth=place_of_birth,
             birth_date=birth_date,
+            civil_status=civil_status,
+            purok=purok,
+            voters_status=voters_status,
+            identified_as=identified_as,
+            email=email,
+            occupation=occupation,
+            citizenship=citizenship,
+            profile_picture=profile_picture_path,
+            sex=sex,
             address=address,
-            contact_number=contact_number if contact_number else None,
-            email=email if email else None,
+            contact_number=contact_number,
             status='Active'
         )
         

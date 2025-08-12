@@ -191,38 +191,93 @@
 
         <!-- Resident Form Fields -->
         <div id="residentFields" class="record-fields" style="display: none;">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="firstName">First Name *</label>
-              <input type="text" id="firstName" name="firstName" required>
+          <div class="resident-form-layout">
+            <div class="profile-uploader">
+              <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;">
+              <img src="https://via.placeholder.com/150" alt="Profile Preview" id="profilePreview">
+              <div class="upload-instructions">
+                <p>Click or drag to upload</p>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="lastName">Last Name *</label>
-              <input type="text" id="lastName" name="lastName" required>
-            </div>
-            <div class="form-group">
-              <label for="sex">Sex</label>
-              <select id="sex" name="sex">
-                <option value="">Select Sex</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="birthDate">Birth Date</label>
-              <input type="date" id="birthDate" name="birthDate">
-            </div>
-            <div class="form-group full">
-              <label for="address">Address *</label>
-              <input type="text" id="address" name="address" required>
-            </div>
-            <div class="form-group">
-              <label for="contactNumber">Contact Number</label>
-              <input type="tel" id="contactNumber" name="contactNumber">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="middleName">Middle Name</label>
+                <input type="text" id="middleName" name="middleName">
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                <label for="alias">Alias</label>
+                <input type="text" id="alias" name="alias">
+              </div>
+              <div class="form-group">
+                <label for="placeOfBirth">Place of Birth</label>
+                <input type="text" id="placeOfBirth" name="placeOfBirth">
+              </div>
+              <div class="form-group">
+                <label for="birthDate">Birth Date</label>
+                <input type="date" id="birthDate" name="birthDate">
+              </div>
+              <div class="form-group">
+                <label for="civilStatus">Civil Status</label>
+                <select id="civilStatus" name="civilStatus">
+                  <option value="">Select Status</option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Widowed">Widowed</option>
+                  <option value="Separated">Separated</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="purok">Purok</label>
+                <input type="text" id="purok" name="purok">
+              </div>
+              <div class="form-group">
+                <label for="votersStatus">Voter's Status</label>
+                <select id="votersStatus" name="votersStatus">
+                  <option value="">Select Status</option>
+                  <option value="Registered">Registered</option>
+                  <option value="Not Registered">Not Registered</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="identifiedAs">Identified As</label>
+                <input type="text" id="identifiedAs" name="identifiedAs">
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email">
+              </div>
+              <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" id="occupation" name="occupation">
+              </div>
+              <div class="form-group">
+                <label for="citizenship">Citizenship</label>
+                <input type="text" id="citizenship" name="citizenship">
+              </div>
+              <div class="form-group">
+                <label for="sex">Sex</label>
+                <select id="sex" name="sex">
+                  <option value="">Select Sex</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label for="address">Address *</label>
+                <input type="text" id="address" name="address" required>
+              </div>
+              <div class="form-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" name="contactNumber">
+              </div>
             </div>
           </div>
         </div>

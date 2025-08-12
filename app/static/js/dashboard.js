@@ -398,6 +398,50 @@ class DashboardManager {
                 }
             });
         }
+
+        // Bind profile picture uploader
+        const uploader = document.querySelector('.profile-uploader');
+        if (uploader) {
+            const fileInput = document.getElementById('profilePicture');
+            const preview = document.getElementById('profilePreview');
+
+            uploader.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        preview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Drag and drop
+            uploader.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploader.classList.add('dragging');
+            });
+
+            uploader.addEventListener('dragleave', () => {
+                uploader.classList.remove('dragging');
+            });
+
+            uploader.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploader.classList.remove('dragging');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    fileInput.files = e.dataTransfer.files;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        preview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     }
 
     showRecordTypeFields(recordType) {
