@@ -13,19 +13,24 @@
   --info: #0ea5e9;         /* sky-500 */
 }
 
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevent scrolling on the body */
+}
+
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, 'Apple Color Emoji', 'Segoe UI Emoji';
   background: linear-gradient(180deg, #0b1229 0%, #0f172a 100%);
   color: var(--text);
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: flex; /* Use flexbox for layout */
 }
 
 .sidebar {
+  width: 260px;
   height: 100vh;
-  position: sticky;
+  position: fixed; /* Keep sidebar fixed */
   top: 0;
+  left: 0;
   background: rgba(11, 18, 41, 0.9);
   border-right: 1px solid var(--border);
   backdrop-filter: blur(10px);
@@ -33,6 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  z-index: 10; /* Ensure sidebar is on top */
 }
 
 .brand { display: flex; align-items: center; gap: 12px; padding: 8px 6px; }
@@ -86,7 +92,13 @@ body {
 }
 .spacer { flex: 1; }
 
-.main { padding: 20px 24px; }
+.main {
+  flex: 1; /* Allow main content to grow */
+  margin-left: 260px; /* Offset for the fixed sidebar */
+  padding: 20px 24px;
+  height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
 .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .topbar h2 { font-size: 20px; }
 .topbar .topbar-actions { display: flex; gap: 10px; }
