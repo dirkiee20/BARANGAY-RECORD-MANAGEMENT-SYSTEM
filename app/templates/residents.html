@@ -9,7 +9,9 @@
 <body>
     <aside class="sidebar">
         <div class="brand">
-            <div class="logo">BRMS</div>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="BRMS Logo" class="logo-img">
+            </div>
             <div class="brand-text">
                 <h1>Barangay</h1>
                 <p>Record Management</p>
@@ -24,7 +26,7 @@
             <a href="/officials" class="nav-link">Officials</a>
             <a href="/reports" class="nav-link">Reports</a>
             <div class="spacer"></div>
-            <a href="/" class="nav-link danger">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link danger">Logout</a>
         </nav>
     </aside>
 

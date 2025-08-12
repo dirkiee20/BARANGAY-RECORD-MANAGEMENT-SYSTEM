@@ -11,7 +11,9 @@
         <form method="POST" class="login-form">
             {{ form.csrf_token }}
             <div class="form-header">
-                <div class="logo">BRMS</div>
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="BRMS Logo" class="logo-img">
+                </div>
                 <h1>Welcome Back</h1>
                 <p>Enter your credentials to access your account</p>
             </div>

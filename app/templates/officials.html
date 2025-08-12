@@ -9,7 +9,9 @@
 <body>
     <aside class="sidebar">
         <div class="brand">
-            <div class="logo">BRMS</div>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="BRMS Logo" class="logo-img">
+            </div>
             <div class="brand-text">
                 <h1>Barangay</h1>
                 <p>Record Management</p>
@@ -24,7 +26,7 @@
             <a href="/officials" class="nav-link active">Officials</a>
             <a href="reports" class="nav-link">Reports</a>
             <div class="spacer"></div>
-            <a href="/" class="nav-link danger">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-link danger">Logout</a>
         </nav>
     </aside>
 
@@ -39,7 +41,7 @@
 
         <section class="officials-grid">
             <!-- Barangay Captain Card -->
-            <div class="official-card captain">
+            <div class="official-card captain" data-role="captain">
                 <div class="official-header">
                     <div class="position-badge">Barangay Captain</div>
                     <div class="term-badge">2022-2025</div>
@@ -70,7 +72,7 @@
             </div>
 
             <!-- Kagawad Cards -->
-            <div class="official-card">
+            <div class="official-card" data-role="kagawad">
                 <div class="official-header">
                     <div class="position-badge">Kagawad - Peace & Order</div>
                     <div class="term-badge">2022-2025</div>
@@ -100,7 +102,7 @@
                 </div>
             </div>
 
-            <div class="official-card">
+            <div class="official-card" data-role="kagawad">
                 <div class="official-header">
                     <div class="position-badge">Kagawad - Health</div>
                     <div class="term-badge">2022-2025</div>
@@ -131,7 +133,7 @@
             </div>
 
             <!-- More Kagawad Cards -->
-            <div class="official-card">
+            <div class="official-card" data-role="kagawad">
                 <div class="official-header">
                     <div class="position-badge">Kagawad - Education</div>
                     <div class="term-badge">2022-2025</div>
@@ -162,7 +164,7 @@
             </div>
 
             <!-- SK Chairman Card -->
-            <div class="official-card">
+            <div class="official-card" data-role="sk-chairman">
                 <div class="official-header">
                     <div class="position-badge">SK Chairman</div>
                     <div class="term-badge">2023-2026</div>
@@ -193,7 +195,7 @@
             </div>
 
             <!-- Secretary Card -->
-            <div class="official-card">
+            <div class="official-card" data-role="secretary">
                 <div class="official-header">
                     <div class="position-badge">Secretary</div>
                     <div class="term-badge">2022-2025</div>
@@ -214,6 +216,37 @@
                     </div>
                     <div class="stat">
                         <div class="stat-value">98%</div>
+                        <div class="stat-label">Attendance</div>
+                    </div>
+                </div>
+                <div class="official-actions">
+                    <button class="btn">View Profile</button>
+                    <button class="icon-btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- Treasurer Card -->
+            <div class="official-card" data-role="treasurer">
+                <div class="official-header">
+                    <div class="position-badge">Treasurer</div>
+                    <div class="term-badge">2022-2025</div>
+                </div>
+                <div class="official-photo">
+                    <div class="photo-placeholder">
+                        <span>RM</span>
+                    </div>
+                </div>
+                <div class="official-info">
+                    <h3>Ricardo Mendoza</h3>
+                    <p>4 Years of Service</p>
+                </div>
+                <div class="official-stats">
+                    <div class="stat">
+                        <div class="stat-value">₱2.4M</div>
+                        <div class="stat-label">Budget</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">99%</div>
                         <div class="stat-label">Attendance</div>
                     </div>
                 </div>

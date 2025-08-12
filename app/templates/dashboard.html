@@ -9,7 +9,9 @@
 <body>
   <aside class="sidebar">
     <div class="brand">
-      <div class="logo">BRMS</div>
+      <div class="logo">
+        <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="BRMS Logo" class="logo-img">
+      </div>
       <div class="brand-text">
         <h1>Barangay</h1>
         <p>Record Management</p>
@@ -24,7 +26,7 @@
       <a href="officials" class="nav-link">Officials</a>
       <a href="/reports" class="nav-link">Reports</a>
       <div class="spacer"></div>
-      <a href="/" class="nav-link danger">Logout</a>
+      <a href="{{ url_for('auth.logout') }}" class="nav-link danger">Logout</a>
     </nav>
   </aside>
 
@@ -33,29 +35,30 @@
       <h2>Dashboard</h2>
       <div class="topbar-actions">
         <input class="search" type="search" placeholder="Search residents, records..." />
-        <button class="btn primary">New Record</button>
+        <button class="btn" onclick="refreshDashboard()">🔄 Refresh</button>
+        <button class="btn primary" id="newRecordBtn">New Record</button>
       </div>
     </header>
 
     <section class="stats">
       <div class="stat-card">
         <div class="stat-label">Total Residents</div>
-        <div class="stat-value">1,254</div>
-        <div class="stat-sub">+18 this week</div>
+        <div class="stat-value">{{ data.stats.total_residents }}</div>
+        <div class="stat-sub">+{{ data.stats.new_residents_week }} this week</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Households</div>
-        <div class="stat-value">342</div>
-        <div class="stat-sub">+3 this week</div>
+        <div class="stat-value">{{ data.stats.total_households }}</div>
+        <div class="stat-sub">+{{ data.stats.new_households_week }} this week</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Active Blotters</div>
-        <div class="stat-value warning">6</div>
-        <div class="stat-sub">2 due today</div>
+        <div class="stat-value warning">{{ data.stats.active_blotters }}</div>
+        <div class="stat-sub">{{ data.stats.blotters_due_today }} due today</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Clearances Issued</div>
-        <div class="stat-value">78</div>
+        <div class="stat-value">{{ data.stats.clearances_issued_month }}</div>
         <div class="stat-sub">Last 30 days</div>
       </div>
     </section>
@@ -78,29 +81,21 @@
               </tr>
             </thead>
             <tbody>
+              {% for resident in data.recent_residents %}
               <tr>
-                <td>Maria Santos</td>
-                <td>Purok 2</td>
-                <td>34</td>
-                <td><span class="badge success">Active</span></td>
+                <td>{{ resident.first_name }} {{ resident.last_name }}</td>
+                <td>{{ resident.address }}</td>
+                <td>{{ resident.age }}</td>
+                <td><span class="badge success">{{ resident.status }}</span></td>
                 <td class="actions">
                   <button class="icon-btn">⋯</button>
                 </td>
               </tr>
+              {% else %}
               <tr>
-                <td>Juan Dela Cruz</td>
-                <td>Purok 1</td>
-                <td>28</td>
-                <td><span class="badge success">Active</span></td>
-                <td class="actions"><button class="icon-btn">⋯</button></td>
+                <td colspan="5" style="text-align: center; color: var(--muted);">No residents found</td>
               </tr>
-              <tr>
-                <td>Ana Lopez</td>
-                <td>Purok 5</td>
-                <td>19</td>
-                <td><span class="badge info">New</span></td>
-                <td class="actions"><button class="icon-btn">⋯</button></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -112,27 +107,36 @@
           <button class="btn">View all</button>
         </div>
         <ul class="list">
+          {% for blotter in data.open_blotters %}
           <li>
             <div>
-              <div class="list-title">Noise Complaint</div>
-              <div class="list-sub">Reported by: R. Cruz · Purok 4</div>
+              <div class="list-title">{{ blotter.case_title }}</div>
+              <div class="list-sub">
+                {% if blotter.reported_by %}
+                  Reported by: {{ blotter.reported_by.first_name }} {{ blotter.reported_by.last_name }}
+                {% else %}
+                  Reported by: Anonymous
+                {% endif %}
+                {% if blotter.location %} · {{ blotter.location }}{% endif %}
+              </div>
             </div>
-            <span class="badge warning">Due today</span>
+            <span class="badge warning">
+              {% if blotter.hearing_date and blotter.hearing_date.date() == data.today %}
+                Due today
+              {% else %}
+                Open
+              {% endif %}
+            </span>
           </li>
+          {% else %}
           <li>
             <div>
-              <div class="list-title">Boundary Dispute</div>
-              <div class="list-sub">Reported by: M. Reyes · Purok 3</div>
+              <div class="list-title">No Open Cases</div>
+              <div class="list-sub">All cases are currently resolved</div>
             </div>
-            <span class="badge">Open</span>
+            <span class="badge success">Good!</span>
           </li>
-          <li>
-            <div>
-              <div class="list-title">Curfew Violation</div>
-              <div class="list-sub">Reported by: Barangay Tanod</div>
-            </div>
-            <span class="badge">Open</span>
-          </li>
+          {% endfor %}
         </ul>
       </div>
 
@@ -145,22 +149,176 @@
           <li>
             <div>
               <div class="list-title">Barangay Clearance</div>
-              <div class="list-sub">Pending: 5 · Processed today: 12</div>
+              <div class="list-sub">Pending: {{ data.clearance_summary.pending }} · Processed today: {{ data.clearance_summary.processed_today }}</div>
             </div>
-            <span class="badge info">Pending</span>
+            {% if data.clearance_summary.pending > 0 %}
+              <span class="badge info">Pending</span>
+            {% else %}
+              <span class="badge success">All Clear</span>
+            {% endif %}
           </li>
           <li>
             <div>
               <div class="list-title">Indigency Certificate</div>
-              <div class="list-sub">Pending: 2 · Processed today: 4</div>
+              <div class="list-sub">Pending: {{ data.clearance_summary.pending }} · Processed today: {{ data.clearance_summary.processed_today }}</div>
             </div>
-            <span class="badge success">On track</span>
+            {% if data.clearance_summary.processed_today > 0 %}
+              <span class="badge success">On track</span>
+            {% else %}
+              <span class="badge">No activity</span>
+            {% endif %}
           </li>
         </ul>
       </div>
     </section>
   </main>
 
+  <!-- New Record Modal -->
+  <div id="newRecordModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create New Record</h3>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      
+      <form id="newRecordForm" class="form">
+        <div class="form-group">
+          <label for="recordType">Record Type *</label>
+          <select id="recordType" name="recordType" required>
+            <option value="">Select Record Type</option>
+          </select>
+        </div>
+
+        <!-- Resident Form Fields -->
+        <div id="residentFields" class="record-fields" style="display: none;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+              <label for="sex">Sex</label>
+              <select id="sex" name="sex">
+                <option value="">Select Sex</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="birthDate">Birth Date</label>
+              <input type="date" id="birthDate" name="birthDate">
+            </div>
+            <div class="form-group full">
+              <label for="address">Address *</label>
+              <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+              <label for="contactNumber">Contact Number</label>
+              <input type="tel" id="contactNumber" name="contactNumber">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email">
+            </div>
+          </div>
+        </div>
+
+        <!-- Household Form Fields -->
+        <div id="householdFields" class="record-fields" style="display: none;">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="headName">Head of Family *</label>
+              <input type="text" id="headName" name="headName" required>
+            </div>
+            <div class="form-group full">
+              <label for="householdAddress">Address *</label>
+              <input type="text" id="householdAddress" name="address" required>
+            </div>
+            <div class="form-group">
+              <label for="purok">Purok/Zone</label>
+              <input type="text" id="purok" name="purok">
+            </div>
+            <div class="form-group">
+              <label for="householdContact">Contact Number</label>
+              <input type="tel" id="householdContact" name="contactNumber">
+            </div>
+          </div>
+        </div>
+
+        <!-- Blotter Form Fields -->
+        <div id="blotterFields" class="record-fields" style="display: none;">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="caseTitle">Case Title *</label>
+              <input type="text" id="caseTitle" name="caseTitle" required>
+            </div>
+            <div class="form-group">
+              <label for="caseType">Case Type</label>
+              <select id="caseType" name="caseType">
+                <option value="">Select Case Type</option>
+                <option value="Dispute">Dispute</option>
+                <option value="Complaint">Complaint</option>
+                <option value="Violation">Violation</option>
+                <option value="Request">Request</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" name="location">
+            </div>
+            <div class="form-group full">
+              <label for="details">Case Details *</label>
+              <textarea id="details" name="details" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="respondentName">Respondent Name</label>
+              <input type="text" id="respondentName" name="respondentName">
+            </div>
+          </div>
+        </div>
+
+        <!-- Clearance Form Fields -->
+        <div id="clearanceFields" class="record-fields" style="display: none;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="clearanceType">Clearance Type *</label>
+              <select id="clearanceType" name="clearanceType" required>
+                <option value="">Select Clearance Type</option>
+                <option value="Barangay Clearance">Barangay Clearance</option>
+                <option value="Indigency Certificate">Indigency Certificate</option>
+                <option value="Good Moral Character">Good Moral Character</option>
+                <option value="Residency Certificate">Residency Certificate</option>
+                <option value="Business Permit">Business Permit</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="purpose">Purpose *</label>
+              <input type="text" id="purpose" name="purpose" required>
+            </div>
+            <div class="form-group full">
+              <label for="residentId">Resident (Optional)</label>
+              <select id="residentId" name="residentId">
+                <option value="">Select Resident</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary" onclick="dashboardManager.hideNewRecordModal()">Cancel</button>
+          <button type="submit" class="btn primary">Create Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
   <script>
     // Placeholder for future interactivity
   </script>

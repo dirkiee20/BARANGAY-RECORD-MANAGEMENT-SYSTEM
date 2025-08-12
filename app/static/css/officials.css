@@ -45,14 +45,19 @@ body {
 }
 
 .brand .logo {
-  width: 40px; 
-  height: 40px; 
-  border-radius: 10px; 
-  background: var(--primary);
-  display: grid; 
-  place-items: center; 
-  font-weight: 700; 
-  color: white;
+    width: 50px; 
+    height: 50px; 
+    border-radius: 10px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.brand .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
 .brand-text h1 { 
@@ -130,9 +135,57 @@ body {
 /* Officials Grid */
 .officials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-    padding-bottom: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px 24px; /* Increased vertical gap for better line spacing */
+    padding: 0 24px 24px;
+    position: relative;
+    margin-top: 24px;
+    margin-bottom: 24px; /* Added margin at bottom */
+}
+
+/* Tree Lines */
+.officials-grid::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        var(--primary) 100%);
+    z-index: 0;
+}
+
+/* Horizontal connecting lines */
+.officials-grid::after {
+    content: '';
+    position: absolute;
+    top: 240px; /* Adjusted for better positioning */
+    left: 16%;
+    width: 68%;
+    height: 2px;
+    background: linear-gradient(90deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        var(--primary) 50%,
+        rgba(99, 102, 241, 0.1) 100%);
+    z-index: 0;
+}
+
+/* Second horizontal line for secretary/treasurer */
+.officials-grid > div[data-role="secretary"]::after,
+.officials-grid > div[data-role="treasurer"]::after {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: 16%;
+    width: 68%;
+    height: 2px;
+    background: linear-gradient(90deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        var(--primary) 50%,
+        rgba(99, 102, 241, 0.1) 100%);
+    z-index: 0;
 }
 
 /* Official Card */
@@ -145,6 +198,8 @@ body {
     flex-direction: column;
     gap: 16px;
     transition: 0.2s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .official-card:hover {
@@ -155,7 +210,55 @@ body {
 .official-card.captain {
     grid-column: 1 / -1;
     max-width: 400px;
-    margin: 0 auto;
+    margin: 0 auto 48px;
+}
+
+.official-card.captain::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg,
+        var(--primary) 0%,
+        rgba(99, 102, 241, 0.3) 100%);
+}
+
+/* Vertical lines from horizontal connector to cards */
+.official-card:not(.captain)::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg,
+        rgba(99, 102, 241, 0.3) 0%,
+        var(--primary) 100%);
+}
+
+/* Specific grid positions for different roles */
+.official-card[data-role="secretary"],
+.official-card[data-role="treasurer"] {
+    grid-row: 3;
+}
+
+.official-card[data-role="kagawad"] {
+    grid-row: 2;
+}
+
+/* Horizontal Lines for Other Officials */
+.official-card:not(.captain)::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg, 
+        rgba(99, 102, 241, 0.1) 0%,
+        var(--primary) 100%);
 }
 
 /* Official Header */

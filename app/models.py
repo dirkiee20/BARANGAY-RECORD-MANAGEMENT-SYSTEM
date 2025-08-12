@@ -9,6 +9,7 @@ class Household(db.Model):
     head_name = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     purok = db.Column(db.String(50), nullable=True)
+    contact_number = db.Column(db.String(20), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     residents = db.relationship('Resident', back_populates='household', cascade='all, delete-orphan')
@@ -27,6 +28,8 @@ class Resident(db.Model):
     sex = db.Column(db.String(10), nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     address = db.Column(db.String(255), nullable=False)
+    contact_number = db.Column(db.String(20), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
     status = db.Column(db.String(30), default='Active', nullable=False)
 
     household_id = db.Column(db.Integer, db.ForeignKey('households.id'), nullable=True)
@@ -47,9 +50,11 @@ class Blotter(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     case_title = db.Column(db.String(180), nullable=False)
+    case_type = db.Column(db.String(50), nullable=True)
     details = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(30), default='Open', nullable=False)
     location = db.Column(db.String(120), nullable=True)
+    respondent_name = db.Column(db.String(120), nullable=True)
     reported_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     hearing_date = db.Column(db.DateTime, nullable=True)
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay RMS · Logout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logout.css') }}">
+</head>
+<body>
+    <main class="logout-container">
+        <div class="logout-card">
+            <div class="logo">BRMS</div>
+            <h1>Logging Out?</h1>
+            <p>Are you sure you want to log out of the Barangay Record Management System?</p>
+            <div class="actions">
+                <a href="/dashboard" class="btn secondary">Cancel</a>
+                <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn primary">Yes, Log Out</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

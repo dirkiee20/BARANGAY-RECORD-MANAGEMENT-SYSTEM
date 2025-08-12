@@ -11,7 +11,9 @@
         <form method="POST" class="register-form">
             {{ form.csrf_token }}
             <div class="form-header">
-                <div class="logo">BRMS</div>
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='img/logo.webp') }}" alt="BRMS Logo" class="logo-img">
+                </div>
                 <h1>Create Account</h1>
                 <p>Join the Barangay Record Management System</p>
             </div>
