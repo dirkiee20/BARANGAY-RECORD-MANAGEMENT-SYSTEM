@@ -400,21 +400,27 @@ class DashboardManager {
     }
 
     showRecordTypeFields(recordType) {
-        // Hide all record fields first
-        const allFields = document.querySelectorAll('.record-fields');
-        allFields.forEach(field => {
-            field.style.display = 'none';
+        // Hide and disable all fieldsets first.
+        document.querySelectorAll('.record-fields').forEach(fieldset => {
+            fieldset.style.display = 'none';
+            fieldset.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = true;
+            });
         });
 
-        // Show fields based on selected record type
-        if (recordType === 'resident') {
-            document.getElementById('residentFields').style.display = 'block';
-        } else if (recordType === 'household') {
-            document.getElementById('householdFields').style.display = 'block';
-        } else if (recordType === 'blotter') {
-            document.getElementById('blotterFields').style.display = 'block';
-        } else if (recordType === 'clearance') {
-            document.getElementById('clearanceFields').style.display = 'block';
+        // If a record type is selected, show and enable its fields.
+        if (recordType) {
+            const activeFieldset = document.getElementById(`${recordType}Fields`);
+            if (activeFieldset) {
+                activeFieldset.style.display = 'block';
+                activeFieldset.querySelectorAll('input, select, textarea').forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        }
+
+        // Special handling for clearance form to load residents.
+        if (recordType === 'clearance') {
             this.loadResidentsForClearance();
         }
     }
@@ -494,18 +500,17 @@ class DashboardManager {
                 body: formData
             });
             
+            const result = await response.json();
             if (response.ok) {
-                const result = await response.json();
                 this.showSuccess(result.message || 'Record created successfully!');
                 this.hideNewRecordModal();
                 this.fetchDashboardData(); // Refresh dashboard
             } else {
-                const error = await response.json();
-                this.showError(error.message || 'Failed to create record');
+                this.showError(result.error || 'Failed to create record');
             }
         } catch (error) {
             console.error('Error creating record:', error);
-            this.showError('Failed to create record');
+            this.showError('An unexpected error occurred. Please try again.');
         } finally {
             // Restore button state
             submitBtn.textContent = originalText;
@@ -519,10 +524,12 @@ class DashboardManager {
             form.reset();
         }
         
-        // Hide all record fields
-        const allFields = document.querySelectorAll('.record-fields');
-        allFields.forEach(field => {
-            field.style.display = 'none';
+        // Hide and disable all record fields
+        document.querySelectorAll('.record-fields').forEach(fieldset => {
+            fieldset.style.display = 'none';
+            fieldset.querySelectorAll('input, select, textarea').forEach(input => {
+                input.disabled = true;
+            });
         });
     }
 
