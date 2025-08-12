@@ -146,9 +146,10 @@ class DashboardManager {
 
         residents.forEach(resident => {
             const row = document.createElement('tr');
+            const address = resident.address || 'N/A';
             row.innerHTML = `
                 <td>${resident.first_name} ${resident.last_name}</td>
-                <td>${resident.address || 'N/A'}</td>
+                <td class="address-cell" title="${address}">${address}</td>
                 <td>${resident.age || 'N/A'}</td>
                 <td><span class="badge success">${resident.status || 'Active'}</span></td>
                 <td class="actions">
