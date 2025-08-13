@@ -3,6 +3,7 @@ class DashboardManager {
     constructor() {
         this.refreshInterval = null;
         this.isLoading = false;
+        this.searchTimeout = null;
         this.init();
     }
 
@@ -14,10 +15,7 @@ class DashboardManager {
 
     bindEvents() {
         // Refresh button
-        const refreshBtn = document.querySelector('.btn[onclick="refreshDashboard()"]');
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', (e) => this.handleRefresh(e));
-        }
+        // The onclick in the HTML now calls dashboardManager.handleRefresh(event)
 
         // New Record button
         const newRecordBtn = document.getElementById('newRecordBtn');
@@ -29,6 +27,13 @@ class DashboardManager {
         const searchInput = document.querySelector('.search');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+            // Hide results when clicking outside
+            document.addEventListener('click', (e) => {
+                const searchContainer = document.querySelector('.search-container');
+                if (searchContainer && !searchContainer.contains(e.target)) {
+                    this.hideSearchResults();
+                }
+            });
         }
 
         // Action buttons
@@ -36,7 +41,7 @@ class DashboardManager {
     }
 
     async handleRefresh(e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (this.isLoading) return;
 
         const btn = e.target;
@@ -255,11 +260,20 @@ class DashboardManager {
     }
 
     handleSearch(query) {
-        // Implement search functionality
-        if (query.length < 2) return;
+        // Debounce search to avoid excessive API calls
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+
+        const searchResultsContainer = document.getElementById('searchResults');
+        if (query.length < 2) {
+            this.hideSearchResults();
+            return;
+        }
         
-        // Search through residents and blotters
-        this.searchRecords(query);
+        this.searchTimeout = setTimeout(() => {
+            this.searchRecords(query);
+        }, 300); // 300ms delay
     }
 
     async searchRecords(query) {
@@ -275,8 +289,48 @@ class DashboardManager {
     }
 
     displaySearchResults(results) {
-        // Create and show search results modal or dropdown
-        console.log('Search results:', results);
+        const container = document.getElementById('searchResults');
+        if (!container) return;
+
+        container.innerHTML = ''; // Clear previous results
+        const allResults = [...results.residents, ...results.blotters];
+
+        if (allResults.length === 0) {
+            container.innerHTML = '<div class="empty-state">No results found.</div>';
+            container.style.display = 'block';
+            return;
+        }
+
+        allResults.forEach(item => {
+            const itemDiv = document.createElement('a'); // Use an anchor tag for navigation
+            itemDiv.classList.add('search-result-item');
+            
+            let title, sub, link, typeClass;
+
+            if (item.type === 'resident') {
+                title = item.name;
+                sub = item.address;
+                link = `/residents/${item.id}`; // Assumes a resident detail page exists
+                typeClass = 'resident';
+            } else if (item.type === 'blotter') {
+                title = item.title;
+                sub = `Status: ${item.status}`;
+                link = `/blotter/${item.id}`; // Assumes a blotter detail page exists
+                typeClass = 'blotter';
+            }
+
+            itemDiv.href = link;
+            itemDiv.innerHTML = `
+                <div class="info">
+                    <div class="title">${title}</div>
+                    <div class="sub">${sub}</div>
+                </div>
+                <span class="type-badge ${typeClass}">${item.type}</span>
+            `;
+            container.appendChild(itemDiv);
+        });
+
+        container.style.display = 'block';
     }
 
     startAutoRefresh() {
@@ -291,6 +345,14 @@ class DashboardManager {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
+        }
+    }
+
+    hideSearchResults() {
+        const container = document.getElementById('searchResults');
+        if (container) {
+            container.style.display = 'none';
+            container.innerHTML = '';
         }
     }
 
@@ -594,17 +656,3 @@ class DashboardManager {
 document.addEventListener('DOMContentLoaded', () => {
     window.dashboardManager = new DashboardManager();
 });
-
-// Global refresh function for onclick handlers
-function refreshDashboard() {
-    if (window.dashboardManager) {
-        window.dashboardManager.handleRefresh(new Event('click'));
-    }
-}
-
-// Global function to show new record modal
-function showNewRecordModal() {
-    if (window.dashboardManager) {
-        window.dashboardManager.showNewRecordModal();
-    }
-}

@@ -34,8 +34,11 @@
     <header class="topbar">
       <h2>Dashboard</h2>
       <div class="topbar-actions">
-        <input class="search" type="search" placeholder="Search residents, records..." />
-        <button class="btn" onclick="refreshDashboard()">🔄 Refresh</button>
+        <div class="search-container">
+          <input class="search" type="search" placeholder="Search residents, records..." autocomplete="off" />
+          <div id="searchResults" class="search-results"></div>
+        </div>
+        <button class="btn" onclick="dashboardManager.handleRefresh(event)">🔄 Refresh</button>
         <button class="btn primary" id="newRecordBtn">New Record</button>
       </div>
     </header>
@@ -194,9 +197,25 @@
           <div class="resident-form-layout">
             <div class="profile-uploader">
               <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;">
-              <img src="https://via.placeholder.com/150" alt="Profile Preview" id="profilePreview">
+              <img src="{{ url_for('static', filename='img/no-profile.webp') }}" alt="Profile Preview" id="profilePreview">
               <div class="upload-instructions">
                 <p>Click or drag to upload</p>
+              </div>
+              <div class="form-group">
+                <label for="birthDate">Birth Date</label>
+                <input type="date" id="birthDate" name="birthDate">
+              </div>
+              <div class="form-group">
+                <label for="sex">Sex</label>
+                <select id="sex" name="sex">
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="citizenship">Citizenship</label>
+                <input type="text" id="citizenship" name="citizenship">
               </div>
             </div>
             <div class="form-grid">
@@ -217,12 +236,16 @@
                 <input type="text" id="alias" name="alias">
               </div>
               <div class="form-group">
-                <label for="placeOfBirth">Place of Birth</label>
-                <input type="text" id="placeOfBirth" name="placeOfBirth">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email">
               </div>
               <div class="form-group">
-                <label for="birthDate">Birth Date</label>
-                <input type="date" id="birthDate" name="birthDate">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" name="contactNumber">
+              </div>
+              <div class="form-group">
+                <label for="placeOfBirth">Place of Birth</label>
+                <input type="text" id="placeOfBirth" name="placeOfBirth">
               </div>
               <div class="form-group">
                 <label for="civilStatus">Civil Status</label>
@@ -251,32 +274,12 @@
                 <input type="text" id="identifiedAs" name="identifiedAs">
               </div>
               <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email">
-              </div>
-              <div class="form-group">
                 <label for="occupation">Occupation</label>
                 <input type="text" id="occupation" name="occupation">
-              </div>
-              <div class="form-group">
-                <label for="citizenship">Citizenship</label>
-                <input type="text" id="citizenship" name="citizenship">
-              </div>
-              <div class="form-group">
-                <label for="sex">Sex</label>
-                <select id="sex" name="sex">
-                  <option value="">Select Sex</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
               </div>
               <div class="form-group full">
                 <label for="address">Address *</label>
                 <input type="text" id="address" name="address" required>
-              </div>
-              <div class="form-group">
-                <label for="contactNumber">Contact Number</label>
-                <input type="tel" id="contactNumber" name="contactNumber">
               </div>
             </div>
           </div>
@@ -357,8 +360,8 @@
               <input type="text" id="purpose" name="purpose" required>
             </div>
             <div class="form-group full">
-              <label for="residentId">Resident (Optional)</label>
-              <select id="residentId" name="residentId">
+              <label for="residentId">Resident *</label>
+              <select id="residentId" name="residentId" required>
                 <option value="">Select Resident</option>
               </select>
             </div>

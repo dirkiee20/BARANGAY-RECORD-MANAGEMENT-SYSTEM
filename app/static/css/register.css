@@ -129,6 +129,28 @@ body {
     color: var(--muted);
 }
 
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password:hover {
+    color: var(--text);
+}
+
 /* Select control specific styles */
 .select-control {
     appearance: none;
@@ -146,6 +168,8 @@ body {
 /* Error messages */
 .errors {
     margin-top: 0.5rem;
+    list-style: none;
+    padding: 0;
 }
 
 .error {
@@ -178,6 +202,12 @@ body {
     background-color: rgba(239, 68, 68, 0.1);
     color: var(--error);
     border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.flash-message.info {
+    background-color: rgba(14, 165, 233, 0.1); /* var(--info) with alpha */
+    color: var(--info);
+    border: 1px solid rgba(14, 165, 233, 0.2);
 }
 
 /* Submit button */

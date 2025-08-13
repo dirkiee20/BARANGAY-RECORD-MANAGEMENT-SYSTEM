@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, jsonify, request, current_app
 from app import db
+from flask_login import login_required
 from app.models import Resident, Household, Blotter, Clearance, Official
 from datetime import datetime, timedelta
 from sqlalchemy import func
@@ -35,6 +36,7 @@ def get_monthly_stats():
     return monthly_stats
 
 @dashboard.route('/dashboard')
+@login_required
 def index():
     try:
         # Get current date and calculate date ranges
@@ -161,6 +163,7 @@ def index():
         return render_template('dashboard.html', data=dashboard_data)
 
 @dashboard.route('/api/dashboard-stats')
+@login_required
 def api_dashboard_stats():
     """API endpoint to get dashboard statistics"""
     try:
@@ -331,6 +334,7 @@ def api_dashboard_stats():
         return jsonify({'error': 'Failed to fetch dashboard data'}), 500
 
 @dashboard.route('/api/record-types')
+@login_required
 def api_record_types():
     """API endpoint to get available record types"""
     record_types = [
@@ -342,6 +346,7 @@ def api_record_types():
     return jsonify(record_types)
 
 @dashboard.route('/api/new-record', methods=['POST'])
+@login_required
 def api_new_record():
     """API endpoint to create a new record"""
     try:
@@ -531,14 +536,13 @@ def create_new_clearance(form_data):
         resident_id = form_data.get('residentId', '').strip()
         
         # Validation
-        if not clearance_type or not purpose:
-            return jsonify({'error': 'Clearance type and purpose are required'}), 400
+        if not all([clearance_type, purpose, resident_id]):
+            return jsonify({'error': 'Clearance type, purpose, and resident are required'}), 400
         
         # Check if resident exists
-        if resident_id:
-            resident = Resident.query.get(resident_id)
-            if not resident:
-                return jsonify({'error': 'Selected resident not found'}), 400
+        resident = Resident.query.get(resident_id)
+        if not resident:
+            return jsonify({'error': 'Selected resident not found'}), 400
         
         # Create clearance
         clearance = Clearance(
@@ -563,6 +567,7 @@ def create_new_clearance(form_data):
         return jsonify({'error': 'Failed to create clearance request'}), 500
 
 @dashboard.route('/api/search')
+@login_required
 def api_search():
     """API endpoint for searching records"""
     try:
@@ -611,6 +616,7 @@ def api_search():
         return jsonify({'error': 'Search failed'}), 500
 
 @dashboard.route('/api/residents')
+@login_required
 def api_residents():
     """API endpoint to get all residents for dropdown selection"""
     try:
