@@ -409,14 +409,27 @@ class DashboardManager {
     }
 
     // New Record Form Methods
-    showNewRecordModal() {
-        console.log('showNewRecordModal called');
+    async showNewRecordModal(recordType = null) {
         const modal = document.getElementById('newRecordModal');
         if (modal) {
-            console.log('Modal found, showing...');
             modal.style.display = 'block';
-            this.loadRecordTypes();
             this.bindFormEvents();
+            
+            // Show a loading state for the select dropdown
+            const recordTypeSelect = document.getElementById('recordType');
+            recordTypeSelect.innerHTML = '<option>Loading types...</option>';
+            recordTypeSelect.disabled = true;
+
+            await this.loadRecordTypes(); // Await the loading
+            recordTypeSelect.disabled = false;
+
+            if (recordType) {
+                recordTypeSelect.value = recordType;
+                this.showRecordTypeFields(recordType);
+            } else {
+                // If no pre-selection, ensure the form is reset to the initial state
+                this.showRecordTypeFields('');
+            }
         } else {
             console.error('Modal not found!');
         }
@@ -526,26 +539,35 @@ class DashboardManager {
             }
         }
 
-        // Special handling for clearance form to load residents.
+        // Special handling for forms that need a resident list.
         if (recordType === 'clearance') {
-            this.loadResidentsForClearance();
+            this.loadResidentsForSelect('residentId');
+        } else if (recordType === 'household') {
+            this.loadResidentsForSelect('headId');
         }
     }
 
-    async loadResidentsForClearance() {
+    async loadResidentsForSelect(selectElementId) {
+        const select = document.getElementById(selectElementId);
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Loading residents...</option>';
+        select.disabled = true;
+
         try {
             const response = await fetch('/api/residents');
             if (response.ok) {
                 const residents = await response.json();
-                this.populateResidentSelect(residents);
+                this.populateResidentSelect(residents, selectElementId);
             }
         } catch (error) {
             console.error('Error loading residents:', error);
+            select.innerHTML = '<option value="">Failed to load residents</option>';
         }
     }
 
-    populateResidentSelect(residents) {
-        const select = document.getElementById('residentId');
+    populateResidentSelect(residents, selectElementId) {
+        const select = document.getElementById(selectElementId);
         if (select) {
             select.innerHTML = '<option value="">Select Resident</option>';
             residents.forEach(resident => {
@@ -554,6 +576,7 @@ class DashboardManager {
                 option.textContent = `${resident.first_name} ${resident.last_name} - ${resident.address}`;
                 select.appendChild(option);
             });
+            select.disabled = false;
         }
     }
 

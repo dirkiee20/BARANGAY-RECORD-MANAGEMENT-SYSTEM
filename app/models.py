@@ -27,20 +27,30 @@ class Household(db.Model):
     __tablename__ = 'households'
 
     id = db.Column(db.Integer, primary_key=True)
-    head_name = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     purok = db.Column(db.String(50), nullable=True)
-    contact_number = db.Column(db.String(20), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    residents = db.relationship('Resident', back_populates='household', cascade='all, delete-orphan')
+    # New socio-economic fields
+    category = db.Column(db.String(50), nullable=True)
+    monthly_income = db.Column(db.Numeric(10, 2), nullable=True)
+    toilet_type = db.Column(db.String(50), nullable=True)
+    remarks = db.Column(db.Text, nullable=True)
+
+    # Foreign key to the resident who is the head of this household
+    head_id = db.Column(db.Integer, db.ForeignKey('residents.id'), nullable=True)
+    head = db.relationship('Resident', back_populates='household_headed', foreign_keys=[head_id], post_update=True)
+    residents = db.relationship('Resident', back_populates='household', cascade='all, delete-orphan', foreign_keys='Resident.household_id')
 
     def __repr__(self) -> str:
-        return f'<Household id={self.id} head={self.head_name!r}>'
+        return f'<Household id={self.id}>'
 
 
 class Resident(db.Model):
     __tablename__ = 'residents'
+    __table_args__ = (
+        db.UniqueConstraint('first_name', 'last_name', 'birth_date', name='_resident_uc'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
@@ -63,13 +73,20 @@ class Resident(db.Model):
     status = db.Column(db.String(30), default='Active', nullable=False)
 
     household_id = db.Column(db.Integer, db.ForeignKey('households.id'), nullable=True)
-    household = db.relationship('Household', back_populates='residents')
+    household = db.relationship('Household', back_populates='residents', foreign_keys=[household_id])
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     clearances = db.relationship('Clearance', back_populates='resident', cascade='all, delete-orphan')
     blotters_reported = db.relationship('Blotter', back_populates='reported_by', foreign_keys='Blotter.reported_by_id')
+    household_headed = db.relationship('Household', back_populates='head', foreign_keys='Household.head_id', uselist=False)
+
+    @property
+    def full_name(self):
+        if self.middle_name:
+            return f"{self.first_name} {self.middle_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
     def __repr__(self) -> str:
         return f'<Resident id={self.id} name={self.last_name}, {self.first_name}>'
@@ -115,11 +132,16 @@ class Official(db.Model):
     __tablename__ = 'officials'
 
     id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(120), nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
     position = db.Column(db.String(80), nullable=False)
     term_start = db.Column(db.Date, nullable=True)
     term_end = db.Column(db.Date, nullable=True)
     status = db.Column(db.String(30), default='Active', nullable=False)
 
     def __repr__(self) -> str:
-        return f'<Official id={self.id} {self.position} {self.full_name!r}>'
+        return f'<Official id={self.id} {self.position} {self.first_name} {self.last_name}>'
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"

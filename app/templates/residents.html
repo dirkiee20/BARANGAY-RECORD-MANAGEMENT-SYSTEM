@@ -34,7 +34,9 @@
         <header class="topbar">
             <h2>Residents</h2>
             <div class="topbar-actions">
-                <input class="search" type="search" placeholder="Search residents..." />
+                <form method="get" action="{{ url_for('residents.index') }}" class="search-form">
+                    <input class="search" name="q" type="search" placeholder="Search residents..." value="{{ query or '' }}" />
+                </form>
                 <button class="btn primary" onclick="document.getElementById('addResidentModal').style.display='block'">New Resident</button>
             </div>
         </header>
@@ -76,39 +78,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Sample data - will be replaced with dynamic data -->
+                            {% for resident in residents %}
                             <tr>
-                                <td>1</td>
-                                <td>John Doe</td>
-                                <td>123 Main St.</td>
-                                <td>123-456-7890</td>
-                                <td><span class="badge success">Active</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-info" title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                <td>{{ resident.id }}</td>
+                                <td>{{ resident.first_name }} {{ resident.last_name }}</td>
+                                <td>{{ resident.address }}</td>
+                                <td>{{ resident.contact_number or 'N/A' }}</td>
+                                <td><span class="badge success">{{ resident.status }}</span></td>
+                                <td class="actions">
+                                    <a href="#" class="btn btn-sm btn-info" title="View">View</a>
+                                    <a href="#" class="btn btn-sm btn-warning" title="Edit">Edit</a>
+                                    <a href="#" class="btn btn-sm btn-danger" title="Delete">Delete</a>
                                 </td>
                             </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" style="text-align: center;">No residents found.</td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
 
+                {% if pagination %}
                 <div class="pagination">
-                    <button class="btn" disabled>Previous</button>
+                    <a href="{{ url_for('residents.index', page=pagination.prev_num, q=query) if pagination.has_prev else '#' }}"
+                       class="btn" {{ 'disabled' if not pagination.has_prev else '' }}>Previous</a>
                     <div class="page-numbers">
-                        <a href="#" class="btn active">1</a>
-                        <a href="#" class="btn">2</a>
-                        <a href="#" class="btn">3</a>
-                        <a href="#" class="btn">4</a>
+                        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <a href="{{ url_for('residents.index', page=page_num, q=query) }}"
+                                   class="btn {{ 'active' if page_num == pagination.page else '' }}">{{ page_num }}</a>
+                            {% else %}
+                                <span class="btn disabled">...</span>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <button class="btn">Next</button>
+                    <a href="{{ url_for('residents.index', page=pagination.next_num, q=query) if pagination.has_next else '#' }}"
+                       class="btn" {{ 'disabled' if not pagination.has_next else '' }}>Next</a>
                 </div>
+                {% endif %}
             </main>
         </div>
     </div>

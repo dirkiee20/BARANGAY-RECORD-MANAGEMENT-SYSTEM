@@ -34,7 +34,9 @@
         <header class="topbar">
             <h2>Households</h2>
             <div class="topbar-actions">
-                <input class="search" type="search" placeholder="Search households..." />
+                <form method="get" action="{{ url_for('households.index') }}" class="search-form">
+                    <input class="search" name="q" type="search" placeholder="Search households..." value="{{ query or '' }}" />
+                </form>
                 <button class="btn primary" onclick="document.getElementById('addHouseholdModal').style.display='block'">New Household</button>
             </div>
         </header>
@@ -42,23 +44,23 @@
         <section class="stats">
             <div class="stat-card">
                 <div class="stat-label">Total Households</div>
-                <div class="stat-value">342</div>
-                <div class="stat-sub">+3 this month</div>
+                <div class="stat-value">{{ stats.total_households if stats else 'N/A' }}</div>
+                <div class="stat-sub">+3 this month</div> <!-- Note: This sub-value is static -->
             </div>
             <div class="stat-card">
                 <div class="stat-label">Average Members</div>
-                <div class="stat-value">4.2</div>
+                <div class="stat-value">{{ stats.avg_members if stats else 'N/A' }}</div>
                 <div class="stat-sub">per household</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Single Parent</div>
-                <div class="stat-value">86</div>
-                <div class="stat-sub">25% of households</div>
+                <div class="stat-value">86</div> <!-- Note: This value is static -->
+                <div class="stat-sub">25% of households</div> <!-- Note: This sub-value is static -->
             </div>
             <div class="stat-card">
                 <div class="stat-label">New Registrations</div>
-                <div class="stat-value">5</div>
-                <div class="stat-sub">This week</div>
+                <div class="stat-value">5</div> <!-- Note: This value is static -->
+                <div class="stat-sub">This week</div> <!-- Note: This sub-value is static -->
             </div>
         </section>
 
@@ -80,54 +82,51 @@
                             <th>Head of Family</th>
                             <th>Address</th>
                             <th>Members</th>
-                            <th>Category</th>
-                            <th></th>
+                            <th>Purok</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>H-2025-001</td>
-                            <td>Juan Dela Cruz</td>
-                            <td>Block 1 Lot 2, Purok 1</td>
-                            <td>5 members</td>
-                            <td><span class="badge">Regular</span></td>
+                        {% for household in households %}
+                        {# This route doesn't exist yet, but is the intended destination for viewing a household #}
+                        <tr onclick="window.location.href='{{ url_for('households.index') }}{{ household.id }}';" style="cursor: pointer;">
+                            <td>H-{{ household.id }}</td>
+                            <td>{{ household.head.full_name if household.head else 'N/A' }}</td>
+                            <td>{{ household.address }}</td>
+                            <td>{{ household.residents|length }} members</td>
+                            <td>{{ household.purok or 'N/A' }}</td>
                             <td class="actions">
-                                <button class="icon-btn">⋯</button>
+                                {# Stop propagation to prevent the row's click event from firing when clicking the buttons #}
+                                <a href="#" onclick="event.stopPropagation();" class="btn btn-sm btn-warning" title="Edit">Edit</a>
+                                <a href="#" onclick="event.stopPropagation();" class="btn btn-sm btn-danger" title="Delete">Delete</a>
                             </td>
                         </tr>
+                        {% else %}
                         <tr>
-                            <td>H-2025-002</td>
-                            <td>Maria Santos</td>
-                            <td>123 Main St., Purok 2</td>
-                            <td>3 members</td>
-                            <td><span class="badge info">Single Parent</span></td>
-                            <td class="actions">
-                                <button class="icon-btn">⋯</button>
-                            </td>
+                            <td colspan="6" style="text-align: center;">No households found.</td>
                         </tr>
-                        <tr>
-                            <td>H-2025-003</td>
-                            <td>Pedro Reyes</td>
-                            <td>45 National Road, Purok 3</td>
-                            <td>6 members</td>
-                            <td><span class="badge success">Senior Headed</span></td>
-                            <td class="actions">
-                                <button class="icon-btn">⋯</button>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% if pagination %}
             <div class="pagination">
-                <button class="btn" disabled>Previous</button>
+                <a href="{{ url_for('households.index', page=pagination.prev_num, q=query) if pagination.has_prev else '#' }}"
+                   class="btn" {{ 'disabled' if not pagination.has_prev else '' }}>Previous</a>
                 <div class="page-numbers">
-                    <a href="#" class="btn active">1</a>
-                    <a href="#" class="btn">2</a>
-                    <a href="#" class="btn">3</a>
-                    <a href="#" class="btn">4</a>
+                    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            <a href="{{ url_for('households.index', page=page_num, q=query) }}"
+                               class="btn {{ 'active' if page_num == pagination.page else '' }}">{{ page_num }}</a>
+                        {% else %}
+                            <span class="btn disabled">...</span>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                <button class="btn">Next</button>
+                <a href="{{ url_for('households.index', page=pagination.next_num, q=query) if pagination.has_next else '#' }}"
+                   class="btn" {{ 'disabled' if not pagination.has_next else '' }}>Next</a>
             </div>
+            {% endif %}
         </div>
     </main>
 

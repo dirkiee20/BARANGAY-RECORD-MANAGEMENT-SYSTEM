@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Barangay RMS · Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  <style>
+    /* Style for address cells to prevent long text from breaking layout */
+    .address-cell {
+      max-width: 200px; /* Adjust as needed */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: help; /* Indicates that more information is available on hover */
+    }
+  </style>
 </head>
 <body>
   <aside class="sidebar">
@@ -87,7 +97,7 @@
               {% for resident in data.recent_residents %}
               <tr>
                 <td>{{ resident.first_name }} {{ resident.last_name }}</td>
-                <td>{{ resident.address }}</td>
+                <td class="address-cell" title="{{ resident.address }}">{{ resident.address }}</td>
                 <td>{{ resident.age }}</td>
                 <td><span class="badge success">{{ resident.status }}</span></td>
                 <td class="actions">
@@ -195,11 +205,13 @@
         <!-- Resident Form Fields -->
         <div id="residentFields" class="record-fields" style="display: none;">
           <div class="resident-form-layout">
-            <div class="profile-uploader">
-              <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;">
-              <img src="{{ url_for('static', filename='img/no-profile.webp') }}" alt="Profile Preview" id="profilePreview">
-              <div class="upload-instructions">
-                <p>Click or drag to upload</p>
+            <div class="profile-column">
+              <div class="profile-uploader">
+                <input type="file" id="profilePicture" name="profilePicture" accept="image/*" style="display: none;">
+                <img src="{{ url_for('static', filename='img/no-profile.webp') }}" alt="Profile Preview" id="profilePreview">
+                <div class="upload-instructions">
+                  <p>Click or drag to upload</p>
+                </div>
               </div>
               <div class="form-group">
                 <label for="birthDate">Birth Date</label>
@@ -288,21 +300,46 @@
         <!-- Household Form Fields -->
         <div id="householdFields" class="record-fields" style="display: none;">
           <div class="form-grid">
-            <div class="form-group full">
-              <label for="headName">Head of Family *</label>
-              <input type="text" id="headName" name="headName" required>
+            <div class="form-group">
+              <label for="headId">Head of Family *</label>
+              <select id="headId" name="headId" required>
+                <option value="">Select a resident...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="householdCategory">Household Category</label>
+              <select id="householdCategory" name="category">
+                <option value="">Select Category</option>
+                <option value="Regular">Regular</option>
+                <option value="Single Parent">Single Parent</option>
+                <option value="Senior Headed">Senior Headed</option>
+                <option value="With PWD">With PWD</option>
+              </select>
             </div>
             <div class="form-group full">
               <label for="householdAddress">Address *</label>
-              <input type="text" id="householdAddress" name="address" required>
+              <input type="text" id="householdAddress" name="address" required placeholder="Block, Lot, Street...">
             </div>
             <div class="form-group">
-              <label for="purok">Purok/Zone</label>
-              <input type="text" id="purok" name="purok">
+              <label for="householdPurok">Purok/Zone</label>
+              <input type="text" id="householdPurok" name="purok">
             </div>
             <div class="form-group">
-              <label for="householdContact">Contact Number</label>
-              <input type="tel" id="householdContact" name="contactNumber">
+              <label for="monthlyIncome">Monthly Income (₱)</label>
+              <input type="number" id="monthlyIncome" name="monthlyIncome" step="0.01" placeholder="e.g., 15000.00">
+            </div>
+            <div class="form-group">
+              <label for="toiletType">Toilet Type</label>
+              <select id="toiletType" name="toiletType">
+                <option value="">Select Type</option>
+                <option value="Water-sealed">Water-sealed</option>
+                <option value="Antipolo">Antipolo</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label for="householdRemarks">Remarks</label>
+              <textarea id="householdRemarks" name="remarks" rows="2"></textarea>
             </div>
           </div>
         </div>

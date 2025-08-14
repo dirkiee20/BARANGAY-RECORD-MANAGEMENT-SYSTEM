@@ -3,7 +3,7 @@ from app import db
 from flask_login import login_required
 from app.models import Resident, Household, Blotter, Clearance, Official
 from datetime import datetime, timedelta
-from sqlalchemy import func
+from sqlalchemy import func, exc
 from sqlalchemy import text
 import json
 import os
@@ -356,7 +356,7 @@ def api_new_record():
             return jsonify({'error': 'Record type is required'}), 400
         
         if record_type == 'resident':
-            return create_new_resident(request.form)
+            return create_new_resident(request.form, request.files)
         elif record_type == 'household':
             return create_new_household(request.form)
         elif record_type == 'blotter':
@@ -370,7 +370,7 @@ def api_new_record():
         print(f"New record error: {e}")
         return jsonify({'error': 'Failed to create record'}), 500
 
-def create_new_resident(form_data):
+def create_new_resident(form_data, files_data):
     """Create a new resident record"""
     try:
         # Extract form data
@@ -403,8 +403,23 @@ def create_new_resident(form_data):
             except ValueError:
                 return jsonify({'error': 'Invalid birth date format'}), 400
         
+        # Check for existing resident to prevent duplicates
+        query = Resident.query.filter(
+            Resident.first_name.ilike(first_name),
+            Resident.last_name.ilike(last_name)
+        )
+
+        if birth_date:
+            query = query.filter_by(birth_date=birth_date)
+        else:
+            # Handles cases where birth date is not provided
+            query = query.filter(Resident.birth_date.is_(None))
+
+        if query.first():
+            return jsonify({'error': 'A resident with the same name and birth date already exists.'}), 409
+
         # Handle file upload
-        profile_picture = request.files.get('profilePicture')
+        profile_picture = files_data.get('profilePicture')
         profile_picture_path = None
         if profile_picture:
             # You would typically save the file to a secure location
@@ -442,38 +457,62 @@ def create_new_resident(form_data):
         )
         
         db.session.add(resident)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            db.session.rollback()
+            # This catches race conditions if two identical requests are made at the same time.
+            return jsonify({'error': 'A resident with the same name and birth date already exists.'}), 409
         
         return jsonify({
             'success': True,
             'message': 'Resident created successfully',
             'resident_id': resident.id
-        })
+        }), 201
         
     except Exception as e:
         db.session.rollback()
         print(f"Create resident error: {e}")
-        return jsonify({'error': 'Failed to create resident'}), 500
+        return jsonify({'error': 'An unexpected error occurred while creating the resident.'}), 500
 
 def create_new_household(form_data):
     """Create a new household record"""
     try:
-        # Extract form data
-        head_name = form_data.get('headName', '').strip()
+        # Extract and validate required fields
+        head_id = form_data.get('headId')
         address = form_data.get('address', '').strip()
+        if not head_id or not address:
+            return jsonify({'error': 'Head of Family and Address are required'}), 400
+
+        # Check if head_id is a valid resident
+        head_resident = Resident.query.get(head_id)
+        if not head_resident:
+            return jsonify({'error': 'Selected Head of Family is not a valid resident'}), 400
+
+        # Extract optional fields
         purok = form_data.get('purok', '').strip()
-        contact_number = form_data.get('contactNumber', '').strip()
-        
-        # Validation
-        if not head_name or not address:
-            return jsonify({'error': 'Head name and address are required'}), 400
-        
+        category = form_data.get('category', '').strip()
+        monthly_income_str = form_data.get('monthlyIncome', '').strip()
+        toilet_type = form_data.get('toiletType', '').strip()
+        remarks = form_data.get('remarks', '').strip()
+
+        # Parse monthly income
+        monthly_income = None
+        if monthly_income_str:
+            try:
+                monthly_income = float(monthly_income_str)
+            except ValueError:
+                return jsonify({'error': 'Invalid monthly income format'}), 400
+
         # Create household
         household = Household(
-            head_name=head_name,
+            head_id=int(head_id),
             address=address,
             purok=purok if purok else None,
-            contact_number=contact_number if contact_number else None
+            category=category if category else None,
+            monthly_income=monthly_income,
+            toilet_type=toilet_type if toilet_type else None,
+            remarks=remarks if remarks else None
         )
         
         db.session.add(household)
@@ -483,7 +522,7 @@ def create_new_household(form_data):
             'success': True,
             'message': 'Household created successfully',
             'household_id': household.id
-        })
+        }), 201
         
     except Exception as e:
         db.session.rollback()
