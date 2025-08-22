@@ -12,6 +12,8 @@
     --border: #1f2540;
 }
 
+html { font-size: 80%; }
+
 html, body { height: 100%; }
 body {
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans;

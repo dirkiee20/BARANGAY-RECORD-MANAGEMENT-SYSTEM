@@ -2,6 +2,8 @@
    Responsive Styles
    ========================================================================== */
 
+html { font-size: 80%; }
+
 /*
  * Common styles for smaller desktop screens (e.g., 14-inch laptops, ~1440px wide).
  * This breakpoint adjusts the main layout and stat cards for a better fit.
