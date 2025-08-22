@@ -21,6 +21,8 @@
     --border: #1f2937;       /* slate-800 */
 }
 
+html { font-size: 80%; }
+
 body {
     min-height: 100vh;
     display: grid;

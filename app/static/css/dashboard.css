@@ -13,6 +13,8 @@
   --info: #0ea5e9;         /* sky-500 */
 }
 
+html { font-size: 80%; }
+
 html, body {
   height: 100%;
   overflow: hidden; /* Prevent scrolling on the body */
