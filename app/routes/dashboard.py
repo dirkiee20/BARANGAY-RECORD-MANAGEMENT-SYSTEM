@@ -3,6 +3,7 @@ from app import db
 from flask_login import login_required
 from app.models import Resident, Household, Blotter, Clearance, Official
 from datetime import datetime, timedelta
+import logging
 from sqlalchemy import func, exc
 from sqlalchemy import text
 import json
@@ -10,6 +11,8 @@ import os
 from werkzeug.utils import secure_filename
 
 dashboard = Blueprint('dashboard', __name__)
+
+logger = logging.getLogger(__name__)
 
 def get_monthly_stats():
     """Get statistics for the current month"""
@@ -36,6 +39,7 @@ def get_monthly_stats():
     return monthly_stats
 
 @dashboard.route('/dashboard')
+
 @login_required
 def index():
     try:
@@ -44,8 +48,12 @@ def index():
         week_ago = now - timedelta(days=7)
         month_ago = now - timedelta(days=30)
         
-        # Query statistics
-        total_residents = Resident.query.count()
+        try:
+            # Query statistics
+            total_residents = Resident.query.count()
+        except Exception as e:
+            logger.error(f"Error fetching total residents: {e}")
+            total_residents = 0
         total_households = Household.query.count()
         
         # Residents added this week
@@ -132,8 +140,7 @@ def index():
         
     except Exception as e:
         # Log the error (in production, you'd want proper logging)
-        print(f"Dashboard error: {e}")
-        
+        logger.error(f"Dashboard error: {e}", exc_info=True)
         # Return dashboard with empty data
         dashboard_data = {
             'stats': {
@@ -162,6 +169,7 @@ def index():
         
         return render_template('dashboard.html', data=dashboard_data)
 
+
 @dashboard.route('/api/dashboard-stats')
 @login_required
 def api_dashboard_stats():
@@ -170,7 +178,7 @@ def api_dashboard_stats():
         # Test database connection first
         try:
             db.session.execute(text('SELECT 1'))
-        except Exception as db_error:
+        except exc.SQLAlchemyError as db_error:
             print(f"Database connection error: {db_error}")
             return jsonify({'error': 'Database connection failed'}), 500
         
@@ -331,6 +339,7 @@ def api_dashboard_stats():
         print(f"API Dashboard error: {e}")
         import traceback
         traceback.print_exc()
+
         return jsonify({'error': 'Failed to fetch dashboard data'}), 500
 
 @dashboard.route('/api/record-types')
@@ -344,6 +353,8 @@ def api_record_types():
         {'value': 'clearance', 'label': 'New Clearance Request'}
     ]
     return jsonify(record_types)
+
+
 
 @dashboard.route('/api/new-record', methods=['POST'])
 @login_required
@@ -369,6 +380,12 @@ def api_new_record():
     except Exception as e:
         print(f"New record error: {e}")
         return jsonify({'error': 'Failed to create record'}), 500
+
+
+@dashboard.route('/api/residents', methods=['POST'])
+@login_required
+def api_create_resident():
+    return create_new_resident(request.form, request.files)
 
 def create_new_resident(form_data, files_data):
     """Create a new resident record"""
@@ -430,8 +447,8 @@ def create_new_resident(form_data, files_data):
             upload_folder = os.path.join(current_app.static_folder, 'uploads')
             os.makedirs(upload_folder, exist_ok=True)
             profile_picture_path = os.path.join(upload_folder, filename)
-            profile_picture.save(profile_picture_path)
-            profile_picture_path = os.path.join('uploads', filename)
+            profile_picture.save(profile_picture_path)  # Save the file
+            profile_picture_path = os.path.join('uploads', filename)  # Store relative path
 
 
         # Create resident
@@ -474,6 +491,7 @@ def create_new_resident(form_data, files_data):
         db.session.rollback()
         print(f"Create resident error: {e}")
         return jsonify({'error': 'An unexpected error occurred while creating the resident.'}), 500
+
 
 def create_new_household(form_data):
     """Create a new household record"""
@@ -529,6 +547,7 @@ def create_new_household(form_data):
         print(f"Create household error: {e}")
         return jsonify({'error': 'Failed to create household'}), 500
 
+
 def create_new_blotter(form_data):
     """Create a new blotter record"""
     try:
@@ -565,6 +584,7 @@ def create_new_blotter(form_data):
         db.session.rollback()
         print(f"Create blotter error: {e}")
         return jsonify({'error': 'Failed to create blotter case'}), 500
+
 
 def create_new_clearance(form_data):
     """Create a new clearance record"""
@@ -604,6 +624,7 @@ def create_new_clearance(form_data):
         db.session.rollback()
         print(f"Create clearance error: {e}")
         return jsonify({'error': 'Failed to create clearance request'}), 500
+
 
 @dashboard.route('/api/search')
 @login_required
@@ -654,6 +675,7 @@ def api_search():
         print(f"Search error: {e}")
         return jsonify({'error': 'Search failed'}), 500
 
+
 @dashboard.route('/api/residents')
 @login_required
 def api_residents():
@@ -678,6 +700,7 @@ def api_residents():
         print(f"Residents API error: {e}")
         return jsonify({'error': 'Failed to fetch residents'}), 500
 
+
 @dashboard.route('/dashboard/test-data')
 def insert_test_data():
     """Insert sample data for testing dashboard functionality"""
@@ -688,22 +711,6 @@ def insert_test_data():
         if Resident.query.count() > 0:
             return "Test data already exists!"
         
-        # Create sample households
-        household1 = Household(
-            head_name="Juan Dela Cruz",
-            address="123 Main Street, Purok 1",
-            purok="Purok 1"
-        )
-        household2 = Household(
-            head_name="Maria Santos",
-            address="456 Oak Avenue, Purok 2", 
-            purok="Purok 2"
-        )
-        
-        db.session.add(household1)
-        db.session.add(household2)
-        db.session.commit()
-        
         # Create sample residents
         resident1 = Resident(
             first_name="Juan",
@@ -711,8 +718,7 @@ def insert_test_data():
             sex="Male",
             birth_date=date(1985, 5, 15),
             address="123 Main Street, Purok 1",
-            status="Active",
-            household_id=household1.id
+            status="Active"
         )
         resident2 = Resident(
             first_name="Maria",
@@ -720,8 +726,7 @@ def insert_test_data():
             sex="Female", 
             birth_date=date(1990, 8, 22),
             address="456 Oak Avenue, Purok 2",
-            status="Active",
-            household_id=household2.id
+            status="Active"
         )
         resident3 = Resident(
             first_name="Ana",
@@ -731,10 +736,26 @@ def insert_test_data():
             address="789 Pine Road, Purok 3",
             status="Active"
         )
-        
-        db.session.add(resident1)
-        db.session.add(resident2)
-        db.session.add(resident3)
+        db.session.add_all([resident1, resident2, resident3])
+        db.session.commit()
+
+        # Create sample households and link heads
+        household1 = Household(
+            address="123 Main Street, Purok 1",
+            purok="Purok 1",
+            head_id=resident1.id
+        )
+        household2 = Household(
+            address="456 Oak Avenue, Purok 2", 
+            purok="Purok 2",
+            head_id=resident2.id
+        )
+        db.session.add_all([household1, household2])
+        db.session.commit()
+
+        # Link residents to their households
+        resident1.household_id = household1.id
+        resident2.household_id = household2.id
         db.session.commit()
         
         # Create sample blotters
@@ -782,6 +803,7 @@ def insert_test_data():
         db.session.rollback()
         return f"Error inserting test data: {str(e)}"
 
+
 @dashboard.route('/api/insert-sample-data')
 def insert_sample_data():
     """Insert sample data for testing"""
@@ -797,17 +819,6 @@ def insert_sample_data():
         
         print("Starting sample data creation...")
         
-        # Create sample household
-        household = Household(
-            head_name='Juan Dela Cruz',
-            address='123 Main Street, Barangay San Jose',
-            purok='Purok 1',
-            contact_number='09123456789'
-        )
-        db.session.add(household)
-        db.session.commit()  # Commit household first
-        print(f"Created household with ID: {household.id}")
-        
         # Create sample resident
         resident = Resident(
             first_name='Juan',
@@ -820,6 +831,17 @@ def insert_sample_data():
         )
         db.session.add(resident)
         db.session.commit()  # Commit resident to get ID
+        print(f"Created resident with ID: {resident.id}")
+
+        # Create sample household and link the resident as head
+        household = Household(
+            head_id=resident.id,
+            address='123 Main Street, Barangay San Jose',
+            purok='Purok 1'
+        )
+        db.session.add(household)
+        db.session.commit()  # Commit household to get ID
+        print(f"Created household with ID: {household.id}")
         
         # Verify resident ID was generated
         if not resident.id:
@@ -891,6 +913,7 @@ def insert_sample_data():
             'traceback': traceback.format_exc()
         }), 500
 
+
 @dashboard.route('/api/test-db')
 def test_database():
     """Simple endpoint to test database connectivity"""
@@ -939,6 +962,7 @@ def test_database():
             'traceback': traceback.format_exc()
         }), 500
 
+
 @dashboard.route('/api/create-tables')
 def create_database_tables():
     """Create database tables if they don't exist"""
@@ -958,6 +982,7 @@ def create_database_tables():
             'status': 'error',
             'message': f'Failed to create tables: {str(e)}'
         }), 500
+
 
 @dashboard.route('/api/db-info')
 def database_info():
@@ -995,6 +1020,7 @@ def database_info():
             'status': 'error',
             'message': f'Failed to get database info: {str(e)}'
         }), 500
+
 
 @dashboard.route('/api/fix-database-schema')
 def fix_database_schema():
@@ -1060,6 +1086,7 @@ def fix_database_schema():
             'message': f'Failed to update database schema: {str(e)}',
             'traceback': traceback.format_exc()
         }), 500
+
 
 @dashboard.route('/api/table-structure')
 def check_table_structure():
@@ -1133,6 +1160,7 @@ def check_table_structure():
             'message': f'Failed to check table structure: {str(e)}',
             'traceback': traceback.format_exc()
         }), 500
+
 
 @dashboard.route('/api/recreate-tables')
 def recreate_tables():

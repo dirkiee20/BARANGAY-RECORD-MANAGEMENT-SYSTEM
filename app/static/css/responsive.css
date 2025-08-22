@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Responsive Styles
+   ========================================================================== */
+
+/*
+ * Common styles for smaller desktop screens (e.g., 14-inch laptops, ~1440px wide).
+ * This breakpoint adjusts the main layout and stat cards for a better fit.
+ */
+@media (max-width: 1440px) {
+    .main {
+        padding: 1.5rem;
+    }
+
+    .topbar {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stats {
+        display: flex; /* Ensure flexbox for wrapping */
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        flex-grow: 1;
+        flex-basis: calc(50% - 1rem); /* Two cards per row on smaller desktops */
+        min-width: 220px;
+    }
+}
+
+/*
+ * Dashboard Page: At 1200px, the multi-column grid becomes too cramped.
+ * We stack the panels vertically for better readability.
+ */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/*
+ * Households Page: Make the table horizontally scrollable.
+ * This is a simple and effective way to handle wide tables on smaller screens.
+ */
+@media (max-width: 1440px) {
+    .table-wrap {
+        overflow-x: auto; /* Enable horizontal scrolling for the table */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+}

@@ -5,16 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Barangay RMS · Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
-  <style>
-    /* Style for address cells to prevent long text from breaking layout */
-    .address-cell {
-      max-width: 200px; /* Adjust as needed */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: help; /* Indicates that more information is available on hover */
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}" />
 </head>
 <body>
   <aside class="sidebar">
@@ -76,7 +67,7 @@
       </div>
     </section>
 
-    <section class="grid">
+    <section class="grid dashboard-grid">
       <div class="panel">
         <div class="panel-header">
           <h3>Recent Residents</h3>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barangay RMS · Households</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/households.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 </head>
 <body>
     <aside class="sidebar">
@@ -18,13 +19,13 @@
             </div>
         </div>
         <nav class="nav">
-            <a href="/dashboard" class="nav-link">Dashboard</a>
-            <a href="/residents" class="nav-link">Residents</a>
-            <a href="/households" class="nav-link active">Households</a>
-            <a href="/blotter" class="nav-link">Blotter</a>
-            <a href="/clearances" class="nav-link">Clearances</a>
-            <a href="/officials" class="nav-link">Officials</a>
-            <a href="/reports" class="nav-link">Reports</a>
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('residents.index') }}" class="nav-link">Residents</a>
+            <a href="{{ url_for('households.index') }}" class="nav-link active">Households</a>
+            <a href="{{ url_for('blotter.index') }}" class="nav-link">Blotter</a>
+            <a href="{{ url_for('clearances.index') }}" class="nav-link">Clearances</a>
+            <a href="{{ url_for('officials.index') }}" class="nav-link">Officials</a>
+            <a href="{{ url_for('reports.index') }}" class="nav-link">Reports</a>
             <div class="spacer"></div>
             <a href="{{ url_for('auth.logout') }}" class="nav-link danger">Logout</a>
         </nav>
@@ -88,17 +89,15 @@
                     </thead>
                     <tbody>
                         {% for household in households %}
-                        {# This route doesn't exist yet, but is the intended destination for viewing a household #}
-                        <tr onclick="window.location.href='{{ url_for('households.index') }}{{ household.id }}';" style="cursor: pointer;">
-                            <td>H-{{ household.id }}</td>
+                        <tr>
+                            <td><a href="{{ url_for('households.view', household_id=household.id) }}">H-{{ household.id }}</a></td>
                             <td>{{ household.head.full_name if household.head else 'N/A' }}</td>
                             <td>{{ household.address }}</td>
                             <td>{{ household.residents|length }} members</td>
                             <td>{{ household.purok or 'N/A' }}</td>
                             <td class="actions">
-                                {# Stop propagation to prevent the row's click event from firing when clicking the buttons #}
-                                <a href="#" onclick="event.stopPropagation();" class="btn btn-sm btn-warning" title="Edit">Edit</a>
-                                <a href="#" onclick="event.stopPropagation();" class="btn btn-sm btn-danger" title="Delete">Delete</a>
+                                <a href="#" class="btn btn-sm btn-warning" title="Edit">Edit</a> {# TODO: Link to edit page #}
+                                <a href="#" class="btn btn-sm btn-danger" title="Delete">Delete</a> {# TODO: Link to delete action #}
                             </td>
                         </tr>
                         {% else %}
@@ -141,40 +140,39 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Head of Family</label>
-                        <select class="search">
+                        <select name="head_id" class="search" required>
                             <option value="">Select a resident...</option>
-                            <option>Juan Dela Cruz</option>
-                            <option>Maria Santos</option>
+                            {# This should be populated dynamically via JavaScript #}
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Household Category</label>
-                        <select class="select-filter">
-                            <option>Regular</option>
-                            <option>Single Parent</option>
-                            <option>Senior Headed</option>
-                            <option>With PWD</option>
+                        <select name="category" class="select-filter">
+                            <option value="Regular">Regular</option>
+                            <option value="Single Parent">Single Parent</option>
+                            <option value="Senior Headed">Senior Headed</option>
+                            <option value="With PWD">With PWD</option>
                         </select>
                     </div>
                     <div class="form-group full">
                         <label>Complete Address</label>
-                        <input type="text" class="search" placeholder="Block, Lot, Street, Purok" required>
+                        <input type="text" name="address" class="search" placeholder="Block, Lot, Street, Purok" required>
                     </div>
                     <div class="form-group">
                         <label>Monthly Income</label>
-                        <input type="number" class="search" placeholder="₱" required>
+                        <input type="number" name="monthly_income" class="search" placeholder="₱" step="0.01">
                     </div>
                     <div class="form-group">
                         <label>Toilet Type</label>
-                        <select class="select-filter">
-                            <option>Water-sealed</option>
-                            <option>Antipolo</option>
-                            <option>None</option>
+                        <select name="toilet_type" class="select-filter">
+                            <option value="Water-sealed">Water-sealed</option>
+                            <option value="Antipolo">Antipolo</option>
+                            <option value="None">None</option>
                         </select>
                     </div>
                     <div class="form-group full">
                         <label>Remarks</label>
-                        <textarea class="search" rows="2"></textarea>
+                        <textarea name="remarks" class="search" rows="2"></textarea>
                     </div>
                 </div>
                 <div class="form-actions">

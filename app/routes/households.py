@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required
+from datetime import date
 from app.models import Household, Resident
 from app import db
 
@@ -41,3 +42,11 @@ def index():
     }
 
     return render_template('households.html', households=households_list, pagination=pagination, query=query, stats=stats)
+
+@households.route('/household/<int:household_id>')
+@login_required
+def view(household_id):
+    """Displays the details of a single household."""
+    household = Household.query.get_or_404(household_id)
+    # We pass today's date to calculate age in the template
+    return render_template('view_household.html', household=household, today=date.today())

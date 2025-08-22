@@ -8,3 +8,5 @@ class Config:
         'postgresql://postgres:kridl@localhost:5432/brms'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MIGRATIONS_DIR = os.path.join('migrations')
+    MIGRATION_REPO = os.path.join(MIGRATIONS_DIR, 'versions')

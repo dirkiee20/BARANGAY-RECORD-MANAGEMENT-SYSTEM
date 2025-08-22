@@ -18,13 +18,13 @@
             </div>
         </div>
         <nav class="nav">
-            <a href="/dashboard" class="nav-link">Dashboard</a>
-            <a href="/residents" class="nav-link">Residents</a>
-            <a href="/households" class="nav-link">Households</a>
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('residents.index') }}" class="nav-link">Residents</a>
+            <a href="{{ url_for('households.index') }}" class="nav-link">Households</a>
             <a href="/blotter" class="nav-link active">Blotter</a>
-            <a href="/clearances" class="nav-link">Clearances</a>
-            <a href="/officials" class="nav-link">Officials</a>
-            <a href="/reports" class="nav-link">Reports</a>
+            <a href="{{ url_for('clearances.index') }}" class="nav-link">Clearances</a>
+            <a href="{{ url_for('officials.index') }}" class="nav-link">Officials</a>
+            <a href="{{ url_for('reports.index') }}" class="nav-link">Reports</a>
             <div class="spacer"></div>
             <a href="{{ url_for('auth.logout') }}" class="nav-link danger">Logout</a>
         </nav>
